@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 180" role="img" aria-labelledby="title description">
+  <title id="title">Kiddie Creative School KCS logo</title>
+  <desc id="description">A colorful school logo with the letters KCS</desc>
+  <rect width="520" height="180" rx="28" fill="#42245f"/>
+  <circle cx="92" cy="90" r="58" fill="#ffd166"/>
+  <path d="M65 58v64M66 91l42-33M66 91l42 31" fill="none" stroke="#42245f" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="166" y="108" fill="#ffffff" font-family="Georgia, serif" font-size="72" font-weight="700" letter-spacing="4">KCS</text>
+  <text x="168" y="142" fill="#ffd166" font-family="Arial, sans-serif" font-size="18" font-weight="700" letter-spacing="3">KIDDIE CREATIVE SCHOOL</text>
+</svg>
