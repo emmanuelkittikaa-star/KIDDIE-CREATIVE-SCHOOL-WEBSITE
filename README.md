@@ -6,7 +6,7 @@ This is a static school website for fees and student placement exams.
 
 This project is ready to be hosted for free on GitHub Pages because it is a static HTML/CSS/JS website.
 
-## Vercel deployment and weekly updates
+## Vercel deployment and hourly updates
 
 This website is also ready for Vercel. Because it is a static site, Vercel will publish it automatically when your GitHub repository is connected.
 
@@ -22,16 +22,16 @@ After deployment, Vercel will create a live URL like:
 
 https://your-vercel-username.vercel.app
 
-### Weekly updates
+### Hourly updates
 
-To show new changes every week:
+To show new changes during the day:
 
 1. Edit the files in the repository.
 2. Commit the changes.
 3. Push to GitHub.
 4. Vercel will redeploy automatically.
 
-This means you can update the school website from your GitHub or Vercel-connected project whenever you want.
+Vercel normally redeploys within a few minutes after each push. It does not create new website content automatically every hour; a person must make and push the change first.
 
 ### Steps
 
