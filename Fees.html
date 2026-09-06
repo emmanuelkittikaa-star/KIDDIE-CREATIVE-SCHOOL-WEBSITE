@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Fees | Kiddie Creative School</title>
+    <style>
+        :root {
+            --ink: #202040;
+            --purple: #633b8f;
+            --purple-dark: #42245f;
+            --yellow: #ffd166;
+            --paper: #fffdf7;
+            --line: #ded8e8;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            color: purple;
+            background-color: aqua;
+            background-image: url(WOW.jpg);
+            font-family: Georgia, "Times New Roman", serif;
+        }
+
+        header {
+            padding: 36px 20px 28px;
+            color: white;
+            text-align: center;
+            background: var(--purple-dark);
+        }
+
+        h1,
+        h2,
+        p {
+            margin-top: 0;
+        }
+
+        header h1 {
+            margin-bottom: 8px;
+        }
+
+        header p {
+            margin-bottom: 0;
+            color: #f8eaff;
+        }
+
+        main {
+            width: min(1100px, calc(100% - 32px));
+            margin: 30px auto 50px;
+        }
+
+        .notice {
+            padding: 16px 20px;
+            border-left: 6px solid var(--yellow);
+            background: var(--paper);
+            box-shadow: 0 8px 24px rgba(66, 36, 95, 0.1);
+        }
+
+        .admin-box {
+            max-width: 420px;
+            margin: 20px auto 0;
+            padding: 18px;
+            background: rgba(255, 255, 255, 0.92);
+            border: 2px solid var(--purple);
+            border-radius: 10px;
+            box-shadow: 0 10px 24px rgba(66, 36, 95, 0.12);
+        }
+
+        .admin-box h3 {
+            margin: 0 0 12px;
+            color: var(--purple-dark);
+        }
+
+        .admin-box-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .admin-box input {
+            flex: 1;
+            min-width: 160px;
+            text-align: left;
+        }
+
+        .admin-box button {
+            padding: 9px 16px;
+            border: 0;
+            border-radius: 6px;
+            background: var(--purple);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .class-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 22px;
+            margin-top: 24px;
+        }
+
+        .class-fees {
+            overflow: hidden;
+            background: var(--paper);
+            border: 2px solid var(--purple);
+            border-radius: 8px;
+            box-shadow: 0 8px 20px rgba(66, 36, 95, 0.12);
+        }
+
+        .class-fees h2 {
+            margin: 0;
+            padding: 14px 16px;
+            color: white;
+            background: var(--purple);
+            font-size: 1.35rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--line);
+            text-align: left;
+        }
+
+        th:last-child,
+        td:last-child {
+            text-align: right;
+        }
+
+        th {
+            color: var(--purple-dark);
+            background: #f3edf9;
+        }
+
+        tr:last-child td {
+            border-bottom: 0;
+        }
+
+        input {
+            width: 120px;
+            padding: 7px 8px;
+            color: var(--ink);
+            border: 1px solid #b9acce;
+            border-radius: 4px;
+            font: inherit;
+            text-align: right;
+        }
+
+        input:focus {
+            outline: 3px solid rgba(255, 209, 102, 0.7);
+            border-color: var(--purple);
+        }
+
+        @media (max-width: 480px) {
+            main {
+                width: min(100% - 20px, 1100px);
+                margin-top: 20px;
+            }
+
+            th,
+            td {
+                padding: 10px 9px;
+            }
+
+            input {
+                width: 100px;
+            }
+        }
+    </style>
+</head>
+
+<body class="body">
+    <header>
+        <h1>School Fees</h1>
+        <p>Kiddie Creative School</p>
+    </header>
+
+    <main>
+        <div class="notice">
+            <strong>School fees:</strong> this page is locked for public visitors. Only the admin can edit the fee
+            values using the admin key.
+        </div>
+
+        <div class="admin-box">
+            <h3>Admin Access</h3>
+            <div class="admin-box-row">
+                <input id="adminKeyInput" type="password" placeholder="Enter admin key">
+                <button id="unlockFeesBtn" type="button">Unlock Fees</button>
+            </div>
+        </div>
+
+        <section class="class-grid" aria-label="Fees by class">
+            <article class="class-fees">
+                <h2>Daycare</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fee item</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Tuition</td>
+                            <td><input type="number" min="0" step="1" data-fee="daycare-tuition" value="1800"></td>
+                        </tr>
+                        <tr>
+                            <td>Books</td>
+                            <td><input type="number" min="0" step="1" data-fee="daycare-books" value="450"></td>
+                        </tr>
+                        <tr>
+                            <td>Uniform</td>
+                            <td><input type="number" min="0" step="1" data-fee="daycare-uniform" value="300"></td>
+                        </tr>
+                        <tr>
+                            <td>Paces</td>
+                            <td><input type="number" min="0" step="1" data-fee="daycare-paces" value="200"></td>
+                        </tr>
+                        <tr>
+                            <td>Field Trip</td>
+                            <td><input type="number" min="0" step="1" data-fee="daycare-field-trip" value="250"></td>
+                        </tr>
+                        <tr>
+                            <td>Library</td>
+                            <td><input type="number" min="0" step="1" data-fee="daycare-library" value="150"></td>
+                        </tr>
+                        <tr>
+                            <td>Total</td>
+                            <td><input type="number" min="0" step="1" data-fee="daycare-total" value="20000" readonly>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </article>
+
+            <article class="class-fees">
+                <h2>Creche</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fee item</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Tuition</td>
+                            <td><input type="number" min="0" step="1" data-fee="creche-tuition" value="2200"></td>
+                        </tr>
+                        <tr>
+                            <td>Books</td>
+                            <td><input type="number" min="0" step="1" data-fee="creche-books" value="500"></td>
+                        </tr>
+                        <tr>
+                            <td>Uniform</td>
+                            <td><input type="number" min="0" step="1" data-fee="creche-uniform" value="350"></td>
+                        </tr>
+                        <tr>
+                            <td>Paces</td>
+                            <td><input type="number" min="0" step="1" data-fee="creche-paces" value="220"></td>
+                        </tr>
+                        <tr>
+                            <td>Field Trip</td>
+                            <td><input type="number" min="0" step="1" data-fee="creche-field-trip" value="280"></td>
+                        </tr>
+                        <tr>
+                            <td>Library</td>
+                            <td><input type="number" min="0" step="1" data-fee="creche-library" value="170"></td>
+                        </tr>
+                        <tr>
+                            <td>Total</td>
+                            <td><input type="number" min="0" step="1" data-fee="creche-total" value="3050" readonly>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </article>
+
+            <article class="class-fees">
+                <h2>Kindergarten</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fee item</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Tuition</td>
+                            <td><input type="number" min="0" step="1" data-fee="kindergarten-tuition" value="2800">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Books</td>
+                            <td><input type="number" min="0" step="1" data-fee="kindergarten-books" value="600"></td>
+                        </tr>
+                        <tr>
+                            <td>Uniform</td>
+                            <td><input type="number" min="0" step="1" data-fee="kindergarten-uniform" value="450">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Paces</td>
+                            <td><input type="number" min="0" step="1" data-fee="kindergarten-paces" value="260"></td>
+                        </tr>
+                        <tr>
+                            <td>Field Trip</td>
+                            <td><input type="number" min="0" step="1" data-fee="kindergarten-field-trip" value="300">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Library</td>
+                            <td><input type="number" min="0" step="1" data-fee="kindergarten-library" value="180">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Total</td>
+                            <td><input type="number" min="0" step="1" data-fee="kindergarten-total" value="3790"
+                                    readonly></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </article>
+
+            <article class="class-fees">
+                <h2>Primary One</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fee item</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Tuition</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-one-tuition" value="3200">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Books</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-one-books" value="700"></td>
+                        </tr>
+                        <tr>
+                            <td>Uniform</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-one-uniform" value="500">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Paces</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-one-paces" value="300"></td>
+                        </tr>
+                        <tr>
+                            <td>Field Trip</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-one-field-trip" value="350">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Library</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-one-library" value="200">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Total</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-one-total" value="4550"
+                                    readonly></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </article>
+
+            <article class="class-fees">
+                <h2>Primary Two</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fee item</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Tuition</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-two-tuition" value="3400">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Books</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-two-books" value="750"></td>
+                        </tr>
+                        <tr>
+                            <td>Uniform</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-two-uniform" value="500">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Paces</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-two-paces" value="320"></td>
+                        </tr>
+                        <tr>
+                            <td>Field Trip</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-two-field-trip" value="360">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Library</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-two-library" value="220">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Total</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-two-total" value="4870"
+                                    readonly></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </article>
+
+            <article class="class-fees">
+                <h2>Primary Three</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fee item</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Tuition</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-three-tuition" value="3600">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Books</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-three-books" value="800">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Uniform</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-three-uniform" value="550">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Paces</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-three-paces" value="340">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Field Trip</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-three-field-trip" value="380">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Library</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-three-library" value="230">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Total</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-three-total" value="5300"
+                                    readonly></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </article>
+
+            <article class="class-fees">
+                <h2>Primary Four</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fee item</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Tuition</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-four-tuition" value="3900">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Books</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-four-books" value="850"></td>
+                        </tr>
+                        <tr>
+                            <td>Uniform</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-four-uniform" value="550">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Paces</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-four-paces" value="360"></td>
+                        </tr>
+                        <tr>
+                            <td>Field Trip</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-four-field-trip" value="420">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Library</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-four-library" value="250">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Total</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-four-total" value="5920"
+                                    readonly></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </article>
+
+            <article class="class-fees">
+                <h2>Primary Five</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fee item</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Tuition</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-five-tuition" value="4200">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Books</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-five-books" value="900"></td>
+                        </tr>
+                        <tr>
+                            <td>Uniform</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-five-uniform" value="600">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Paces</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-five-paces" value="400"></td>
+                        </tr>
+                        <tr>
+                            <td>Field Trip</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-five-field-trip" value="450">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Library</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-five-library" value="280">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Total</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-five-total" value="6330"
+                                    readonly></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </article>
+
+            <article class="class-fees">
+                <h2>Primary Six</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fee item</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Tuition</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-six-tuition" value="4500">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Books</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-six-books" value="950"></td>
+                        </tr>
+                        <tr>
+                            <td>Uniform</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-six-uniform" value="650">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Paces</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-six-paces" value="420"></td>
+                        </tr>
+                        <tr>
+                            <td>Field Trip</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-six-field-trip" value="470">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Library</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-six-library" value="300">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Total</td>
+                            <td><input type="number" min="0" step="1" data-fee="primary-six-total" value="6840"
+                                    readonly></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </article>
+        </section>
+    </main>
+
+    <script>
+        const ADMIN_KEY = '10001000';
+        const schoolFees = {
+            "daycare-tuition": 1800,
+            "daycare-books": 450,
+            "daycare-uniform": 300,
+            "daycare-paces": 200,
+            "daycare-field-trip": 250,
+            "daycare-library": 150,
+            "daycare-total": 2350,
+            "creche-tuition": 2200,
+            "creche-books": 500,
+            "creche-uniform": 350,
+            "creche-paces": 220,
+            "creche-field-trip": 280,
+            "creche-library": 170,
+            "creche-total": 3050,
+            "kindergarten-tuition": 2800,
+            "kindergarten-books": 600,
+            "kindergarten-uniform": 450,
+            "kindergarten-paces": 260,
+            "kindergarten-field-trip": 300,
+            "kindergarten-library": 180,
+            "kindergarten-total": 3790,
+            "primary-one-tuition": 3200,
+            "primary-one-books": 700,
+            "primary-one-uniform": 500,
+            "primary-one-paces": 300,
+            "primary-one-field-trip": 350,
+            "primary-one-library": 200,
+            "primary-one-total": 4550,
+            "primary-two-tuition": 3400,
+            "primary-two-books": 750,
+            "primary-two-uniform": 500,
+            "primary-two-paces": 320,
+            "primary-two-field-trip": 360,
+            "primary-two-library": 220,
+            "primary-two-total": 4870,
+            "primary-three-tuition": 3600,
+            "primary-three-books": 800,
+            "primary-three-uniform": 550,
+            "primary-three-paces": 340,
+            "primary-three-field-trip": 380,
+            "primary-three-library": 230,
+            "primary-three-total": 5300,
+            "primary-four-tuition": 3900,
+            "primary-four-books": 850,
+            "primary-four-uniform": 550,
+            "primary-four-paces": 360,
+            "primary-four-field-trip": 420,
+            "primary-four-library": 250,
+            "primary-four-total": 5920,
+            "primary-five-tuition": 4200,
+            "primary-five-books": 900,
+            "primary-five-uniform": 600,
+            "primary-five-paces": 400,
+            "primary-five-field-trip": 450,
+            "primary-five-library": 280,
+            "primary-five-total": 6330,
+            "primary-six-tuition": 4500,
+            "primary-six-books": 950,
+            "primary-six-uniform": 650,
+            "primary-six-paces": 420,
+            "primary-six-field-trip": 470,
+            "primary-six-library": 300,
+            "primary-six-total": 6840
+        };
+
+        const feeInputs = [...document.querySelectorAll("[data-fee]")];
+        const adminKeyInput = document.getElementById('adminKeyInput');
+        const unlockFeesBtn = document.getElementById('unlockFeesBtn');
+
+        function setFeeInputsDisabled(disabled) {
+            feeInputs.forEach(function (input) {
+                input.disabled = disabled;
+            });
+        }
+
+        function unlockFees() {
+            if (adminKeyInput.value.trim() !== ADMIN_KEY) {
+                alert('Incorrect admin key. Only the school administrator can edit the fees.');
+                adminKeyInput.value = '';
+                return;
+            }
+
+            setFeeInputsDisabled(false);
+            alert('Admin access granted. You can now edit the fees.');
+            adminKeyInput.value = '';
+        }
+
+        feeInputs.forEach(function (input) {
+            const feeKey = input.dataset.fee;
+            const savedAmount = localStorage.getItem("school-fee-" + feeKey);
+            const defaultValue = Object.prototype.hasOwnProperty.call(schoolFees, feeKey)
+                ? schoolFees[feeKey]
+                : 0;
+
+            input.value = savedAmount !== null ? savedAmount : defaultValue;
+            input.disabled = true;
+
+            input.addEventListener("input", function () {
+                localStorage.setItem("school-fee-" + feeKey, input.value);
+            });
+        });
+
+        unlockFeesBtn.addEventListener('click', unlockFees);
+        adminKeyInput.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                unlockFees();
+            }
+        });
+    </script>
+</body>
+
+</html>

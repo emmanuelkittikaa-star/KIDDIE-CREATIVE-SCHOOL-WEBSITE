@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Exam | Kiddie Creative School</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background-image: url("billy-huynh-W8KTS-mhFUE-unsplash.jpg");
+            background-size: cover;
+            background-position: center;
+            color: #1f1b2d;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 980px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .exam-box {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 18px;
+            padding: 30px;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #3f296b;
+        }
+
+        .intro {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #4c4369;
+            font-size: 1.02rem;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: end;
+            margin-bottom: 20px;
+        }
+
+        .field {
+            flex: 1;
+            min-width: 220px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #2b2145;
+        }
+
+        input,
+        select,
+        button {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 1px solid #c9bbeb;
+            font-size: 1rem;
+        }
+
+        input:focus,
+        select:focus {
+            outline: 3px solid rgba(77, 45, 121, 0.12);
+            border-color: #4d2d79;
+        }
+
+        button {
+            background: #4d2d79;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #3e235d;
+        }
+
+        .questions {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .questions.visible {
+            display: block;
+        }
+
+        .question {
+            margin-bottom: 24px;
+            padding: 16px 18px;
+            border: 1px solid #eae0ff;
+            border-radius: 12px;
+            background: #faf7ff;
+        }
+
+        .question h3 {
+            margin-top: 0;
+            margin-bottom: 12px;
+            font-size: 1.04rem;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .options label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 0;
+            padding: 8px 10px;
+            background: white;
+            border: 1px solid #d9d3eb;
+            border-radius: 8px;
+            font-weight: normal;
+        }
+
+        .options input {
+            accent-color: #4d2d79;
+        }
+
+        .result {
+            display: none;
+            margin-top: 24px;
+            padding: 18px 20px;
+            border-radius: 12px;
+            background: #eef8ff;
+            border: 1px solid #bdd9f0;
+        }
+
+        .result.show {
+            display: block;
+        }
+
+        .result h2 {
+            margin-top: 0;
+            color: #214a6d;
+        }
+
+        .whatsapp-button {
+            display: inline-block;
+            background: #25d366;
+            color: white;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.2);
+        }
+
+        .whatsapp-button:hover {
+            background: #1ebe5b;
+        }
+
+        .timer {
+            display: none;
+            margin-bottom: 18px;
+            text-align: right;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #4d2d79;
+            background: #f1eaff;
+            border: 1px solid #d7c9ff;
+            border-radius: 10px;
+            padding: 10px 14px;
+        }
+
+        .timer.warning {
+            color: #a5391c;
+            background: #fff1eb;
+            border-color: #f5b7a9;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="exam-box">
+            <h1>Student Placement Exam</h1>
+            <p class="intro">Fill in the child’s details and choose the class to begin the assessment.</p>
+
+            <div class="row">
+                <div class="field">
+                    <label for="studentName">Student Name</label>
+                    <input id="studentName" type="text" placeholder="Enter student name">
+                </div>
+                <div class="field">
+                    <label for="registrationNumber">Registration Number</label>
+                    <input id="registrationNumber" type="text" placeholder="Auto-generated registration number"
+                        readonly>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="field">
+                    <label for="childClass">Child's Class</label>
+                    <select id="childClass">
+                        <option value="">-- Choose class --</option>
+                        <option value="Daycare">Daycare</option>
+                        <option value="Creche">Creche</option>
+                        <option value="Kindergarten">Kindergarten</option>
+                        <option value="Primary One">Primary One</option>
+                        <option value="Primary Two">Primary Two</option>
+                        <option value="Primary Three">Primary Three</option>
+                        <option value="Primary Four">Primary Four</option>
+                        <option value="Primary Five">Primary Five</option>
+                        <option value="Primary Six">Primary Six</option>
+                    </select>
+                </div>
+                <div class="field" style="min-width: 180px;">
+                    <button id="loadExamBtn" type="button">Load Exam</button>
+                </div>
+            </div>
+
+            <div id="timer" class="timer">Time Left: 10:00</div>
+
+            <form id="examForm">
+                <div id="questions" class="questions"></div>
+
+                <div class="controls" style="margin-top: 20px; display: none;" id="submitArea">
+                    <button type="submit">Submit Exam</button>
+                </div>
+            </form>
+
+            <div id="resultBox" class="result">
+                <h2>Exam Result</h2>
+                <p id="resultText"></p>
+                <div id="sendDetailsContainer" style="display: none; margin-top: 16px;">
+                    <a id="sendDetailsBtn" class="whatsapp-button" href="#" target="_blank"
+                        rel="noopener noreferrer">Send Details</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questionBank = {
+            Daycare: [
+                { question: '1. Which picture has the same shape as a circle?', options: ['Triangle', 'Square', 'Circle', 'Rectangle'], answer: 'Circle' },
+                { question: '2. Which number comes after 4?', options: ['3', '5', '6', '7'], answer: '5' },
+                { question: '3. What color is the sky on a sunny day?', options: ['Red', 'Blue', 'Green', 'Yellow'], answer: 'Blue' },
+                { question: '4. Which one is a body part?', options: ['Book', 'Table', 'Hand', 'Cup'], answer: 'Hand' },
+                { question: '5. Which word is the opposite of big?', options: ['Tiny', 'Strong', 'Fast', 'Happy'], answer: 'Tiny' },
+                { question: '6. What comes next: 1, 2, 3, ?', options: ['4', '5', '6', '7'], answer: '4' },
+                { question: '7. Which animal says “moo”?', options: ['Dog', 'Cat', 'Cow', 'Duck'], answer: 'Cow' },
+                { question: '8. Which one is a shape?', options: ['Chair', 'Triangle', 'Bottle', 'Sock'], answer: 'Triangle' },
+                { question: '9. What is the first letter of the word “sun”?', options: ['s', 'u', 'n', 't'], answer: 's' },
+                { question: '10. Which one is used to tell time?', options: ['Clock', 'Book', 'Spoon', 'Bag'], answer: 'Clock' },
+                { question: '11. Which animal barks?', options: ['Dog', 'Cow', 'Duck', 'Cat'], answer: 'Dog' },
+                { question: '12. Which fruit is red?', options: ['Banana', 'Orange', 'Apple', 'Grapes'], answer: 'Apple' },
+                { question: '13. Which letter comes after A?', options: ['B', 'C', 'D', 'E'], answer: 'B' },
+                { question: '14. What is 3 + 2?', options: ['4', '5', '6', '7'], answer: '5' },
+                { question: '15. Which color is a leaf?', options: ['Black', 'Green', 'Purple', 'Pink'], answer: 'Green' },
+                { question: '16. What is 2 + 1?', options: ['2', '3', '4', '5'], answer: '3' },
+                { question: '17. Which animal lives in water?', options: ['Cat', 'Fish', 'Dog', 'Bird'], answer: 'Fish' },
+                { question: '18. What shape is a window?', options: ['Circle', 'Square', 'Triangle', 'Oval'], answer: 'Square' },
+                { question: '19. Which number is bigger than 5?', options: ['4', '5', '6', '3'], answer: '6' },
+                { question: '20. Which color is the sun?', options: ['Blue', 'Yellow', 'Purple', 'Black'], answer: 'Yellow' },
+                { question: '21. Which is a vehicle?', options: ['Bus', 'Chair', 'Book', 'Pillow'], answer: 'Bus' },
+                { question: '22. Which item is used in school?', options: ['Pencil', 'Socks', 'Plate', 'Shoe'], answer: 'Pencil' },
+                { question: '23. What comes next: red, blue, red, ?', options: ['Green', 'Blue', 'Yellow', 'Black'], answer: 'Blue' },
+                { question: '24. Which word rhymes with “dog”?', options: ['Hot', 'Log', 'Sun', 'Pink'], answer: 'Log' },
+                { question: '25. Which thing is soft?', options: ['Pillow', 'Stone', 'Table', 'Wall'], answer: 'Pillow' },
+                { question: '26. How many wheels does a bicycle have?', options: ['1', '2', '3', '4'], answer: '2' },
+                { question: '27. Which fruit is yellow?', options: ['Banana', 'Apple', 'Orange', 'Pear'], answer: 'Banana' },
+                { question: '28. What day comes after Monday?', options: ['Friday', 'Tuesday', 'Sunday', 'Wednesday'], answer: 'Tuesday' },
+                { question: '29. Which season is cold?', options: ['Winter', 'Summer', 'Autumn', 'Spring'], answer: 'Winter' },
+                { question: '30. What does a red traffic light mean?', options: ['Go', 'Wait', 'Run', 'Jump'], answer: 'Wait' }
+            ],
+            Creche: [
+                { question: '1. What is 2 + 3?', options: ['4', '5', '6', '7'], answer: '5' },
+                { question: '2. Which letter comes after B?', options: ['A', 'C', 'D', 'E'], answer: 'C' },
+                { question: '3. A dog says?', options: ['Moo', 'Bark', 'Meow', 'Quack'], answer: 'Bark' },
+                { question: '4. Which object is used for writing?', options: ['Chair', 'Pencil', 'Bottle', 'Shoe'], answer: 'Pencil' },
+                { question: '5. Which one is a fruit?', options: ['Carrot', 'Apple', 'Bread', 'Stone'], answer: 'Apple' },
+                { question: '6. What is 5 - 2?', options: ['2', '3', '4', '5'], answer: '3' },
+                { question: '7. Which one is a number?', options: ['A', 'B', '8', 'K'], answer: '8' },
+                { question: '8. Which picture is a square?', options: ['Circle', 'Square', 'Triangle', 'Line'], answer: 'Square' },
+                { question: '9. What color is grass?', options: ['Pink', 'Green', 'Orange', 'Black'], answer: 'Green' },
+                { question: '10. Which item is worn on the feet?', options: ['Shirt', 'Socks', 'Cap', 'Book'], answer: 'Socks' },
+                { question: '11. What is 1 + 4?', options: ['4', '5', '6', '7'], answer: '5' },
+                { question: '12. Which letter is the first in the alphabet?', options: ['A', 'B', 'C', 'D'], answer: 'A' },
+                { question: '13. Which shape has three sides?', options: ['Triangle', 'Circle', 'Rectangle', 'Square'], answer: 'Triangle' },
+                { question: '14. Which one is not a fruit?', options: ['Orange', 'Banana', 'Carrot', 'Grapes'], answer: 'Carrot' },
+                { question: '15. What comes next: 2, 3, 4, ?', options: ['5', '6', '7', '8'], answer: '5' },
+                { question: '16. Which word begins with the letter M?', options: ['Sun', 'Moon', 'Tree', 'Bird'], answer: 'Moon' },
+                { question: '17. What is 6 - 3?', options: ['2', '3', '4', '5'], answer: '3' },
+                { question: '18. Which one is a pet?', options: ['Fish', 'Leaf', 'Stone', 'Clay'], answer: 'Fish' },
+                { question: '19. What color is an orange?', options: ['Blue', 'Orange', 'Red', 'Green'], answer: 'Orange' },
+                { question: '20. Which one is used in the kitchen?', options: ['Plate', 'Ball', 'Book', 'Pencil'], answer: 'Plate' },
+                { question: '21. Which job helps us learn?', options: ['Teacher', 'Farmer', 'Driver', 'Doctor'], answer: 'Teacher' },
+                { question: '22. Which one is a shape?', options: ['House', 'Circle', 'River', 'Cloud'], answer: 'Circle' },
+                { question: '23. Which month is first in the year?', options: ['January', 'March', 'June', 'December'], answer: 'January' },
+                { question: '24. What is 7 + 1?', options: ['7', '8', '9', '10'], answer: '8' },
+                { question: '25. Which animal says “quack”?', options: ['Duck', 'Cow', 'Lion', 'Horse'], answer: 'Duck' },
+                { question: '26. Which word is the opposite of short?', options: ['Long', 'Small', 'Thin', 'Weak'], answer: 'Long' },
+                { question: '27. Which one is a shoe?', options: ['Shoe', 'Cup', 'Book', 'Door'], answer: 'Shoe' },
+                { question: '28. Which number comes before 8?', options: ['7', '8', '9', '10'], answer: '7' },
+                { question: '29. Which smell is from a flower?', options: ['Sweet', 'Sharp', 'Cold', 'Heavy'], answer: 'Sweet' },
+                { question: '30. What is 4 + 4?', options: ['6', '7', '8', '9'], answer: '8' }
+            ],
+            Kindergarten: [
+                { question: '1. What is 10 - 4?', options: ['4', '5', '6', '7'], answer: '6' },
+                { question: '2. Which word is spelled correctly?', options: ['Hause', 'House', 'Hous', 'Houss'], answer: 'House' },
+                { question: '3. Which shape has three sides?', options: ['Triangle', 'Circle', 'Rectangle', 'Oval'], answer: 'Triangle' },
+                { question: '4. Which is the correct sequence?', options: ['1, 2, 3, 4', '2, 3, 1, 4', '3, 1, 2, 4', '4, 3, 2, 1'], answer: '1, 2, 3, 4' },
+                { question: '5. The opposite of hot is?', options: ['Warm', 'Cold', 'Bright', 'Heavy'], answer: 'Cold' },
+                { question: '6. What is 7 + 3?', options: ['8', '9', '10', '11'], answer: '10' },
+                { question: '7. Which word rhymes with “cat”?', options: ['Hat', 'Big', 'Tree', 'Sun'], answer: 'Hat' },
+                { question: '8. Which shape has four equal sides?', options: ['Triangle', 'Circle', 'Square', 'Oval'], answer: 'Square' },
+                { question: '9. Which is a correct sentence?', options: ['I are happy.', 'I am happy.', 'I happy.', 'Am I happy.'], answer: 'I am happy.' },
+                { question: '10. Which is the last letter in the word “dog”?', options: ['d', 'o', 'g', 'a'], answer: 'g' },
+                { question: '11. Which of these is an adjective?', options: ['Red', 'Jump', 'Book', 'Run'], answer: 'Red' },
+                { question: '12. What is 8 + 5?', options: ['11', '12', '13', '14'], answer: '13' },
+                { question: '13. Which word means the same as small?', options: ['Tiny', 'Big', 'Tall', 'Fast'], answer: 'Tiny' },
+                { question: '14. Fill in the blank: I ___ to school every day.', options: ['go', 'gone', 'goed', 'goes'], answer: 'go' },
+                { question: '15. Which number comes after 19?', options: ['18', '20', '21', '22'], answer: '20' },
+                { question: '16. What is half of 10?', options: ['3', '4', '5', '6'], answer: '5' },
+                { question: '17. Which is a correct spelling?', options: ['Bik', 'Bike', 'Biek', 'Bick'], answer: 'Bike' },
+                { question: '18. Which word is a verb?', options: ['Dance', 'Blue', 'House', 'Chair'], answer: 'Dance' },
+                { question: '19. What is 15 - 6?', options: ['7', '8', '9', '10'], answer: '9' },
+                { question: '20. Which one is a liquid?', options: ['Milk', 'Stone', 'Book', 'Table'], answer: 'Milk' },
+                { question: '21. Which shape has no corners?', options: ['Circle', 'Triangle', 'Square', 'Rectangle'], answer: 'Circle' },
+                { question: '22. Which sentence is correct?', options: ['She are happy.', 'She is happy.', 'She am happy.', 'She happy.'], answer: 'She is happy.' },
+                { question: '23. What is 9 + 9?', options: ['16', '17', '18', '19'], answer: '18' },
+                { question: '24. Which month comes after March?', options: ['April', 'May', 'June', 'February'], answer: 'April' },
+                { question: '25. Which word is an action?', options: ['Jump', 'Blue', 'Soft', 'Tall'], answer: 'Jump' },
+                { question: '26. Which number is odd?', options: ['4', '8', '7', '10'], answer: '7' },
+                { question: '27. What is 20 - 5?', options: ['10', '12', '15', '18'], answer: '15' },
+                { question: '28. Which sentence ends with a question mark?', options: ['I am tired.', 'Where are you?', 'Close the door.', 'The sky is blue.'], answer: 'Where are you?' },
+                { question: '29. Which word is the opposite of day?', options: ['Night', 'Sun', 'Light', 'Shine'], answer: 'Night' },
+                { question: '30. What is 12 + 7?', options: ['18', '19', '20', '21'], answer: '19' }
+            ],
+            'Primary One': [
+                { question: '1. Solve: 12 + 8 = ?', options: ['18', '20', '22', '24'], answer: '20' },
+                { question: '2. Which is a vowel?', options: ['M', 'B', 'A', 'T'], answer: 'A' },
+                { question: '3. Which sentence is correct?', options: ['She go to school.', 'She goes to school.', 'She going to school.', 'She gone to school.'], answer: 'She goes to school.' },
+                { question: '4. Which is the correct spelling?', options: ['Becaus', 'Because', 'Becase', 'Becoase'], answer: 'Because' },
+                { question: '5. A square has how many sides?', options: ['2', '3', '4', '5'], answer: '4' },
+                { question: '6. What is 9 + 6?', options: ['13', '14', '15', '16'], answer: '15' },
+                { question: '7. Which is a noun?', options: ['Run', 'Jump', 'Book', 'Fast'], answer: 'Book' },
+                { question: '8. Which month comes after April?', options: ['March', 'May', 'June', 'July'], answer: 'May' },
+                { question: '9. 15 - 7 = ?', options: ['6', '7', '8', '9'], answer: '8' },
+                { question: '10. Which sentence uses a question mark correctly?', options: ['Where are you going', 'Where are you going?', 'Where are you going!', 'where are you going?'], answer: 'Where are you going?' },
+                { question: '11. What is 18 + 4?', options: ['20', '21', '22', '23'], answer: '22' },
+                { question: '12. Which word is a pronoun?', options: ['He', 'Run', 'Table', 'Blue'], answer: 'He' },
+                { question: '13. Which letter is a consonant?', options: ['A', 'E', 'I', 'T'], answer: 'T' },
+                { question: '14. What is 10 + 10?', options: ['18', '19', '20', '21'], answer: '20' },
+                { question: '15. Which is the correct spelling of the month?', options: ['Septmber', 'September', 'Septembe', 'Septeber'], answer: 'September' },
+                { question: '16. A rectangle has how many corners?', options: ['2', '3', '4', '5'], answer: '4' },
+                { question: '17. What is 14 - 9?', options: ['3', '4', '5', '6'], answer: '5' },
+                { question: '18. Choose the correct word: I ___ my homework.', options: ['do', 'does', 'doing', 'done'], answer: 'do' },
+                { question: '19. Which month comes before December?', options: ['November', 'January', 'March', 'October'], answer: 'November' },
+                { question: '20. Which sentence is correct?', options: ['The dog bark loud.', 'The dog barks loud.', 'The dog barked loud.', 'The dog barking loud.'], answer: 'The dog barks loud.' },
+                { question: '21. What is 25 + 7?', options: ['30', '31', '32', '33'], answer: '32' },
+                { question: '22. Which word is the opposite of tall?', options: ['Short', 'Big', 'Fast', 'Wide'], answer: 'Short' },
+                { question: '23. What is 9 x 2?', options: ['16', '17', '18', '19'], answer: '18' },
+                { question: '24. Which sentence ends with a full stop?', options: ['How are you?', 'I am happy.', 'Who is she?', 'Why are you here?'], answer: 'I am happy.' },
+                { question: '25. Which number is even?', options: ['3', '5', '7', '8'], answer: '8' },
+                { question: '26. Complete the pattern: 2, 4, 6, ?', options: ['7', '8', '9', '10'], answer: '8' },
+                { question: '27. Which is the correct noun?', options: ['Jump', 'Book', 'Happy', 'Run'], answer: 'Book' },
+                { question: '28. What is 20 - 8?', options: ['10', '11', '12', '13'], answer: '12' },
+                { question: '29. Which word is a vowel?', options: ['M', 'N', 'O', 'P'], answer: 'O' },
+                { question: '30. Which sentence is grammatically correct?', options: ['We is going home.', 'We are going home.', 'We am going home.', 'We going home.'], answer: 'We are going home.' }
+            ],
+            'Primary Two': [
+                { question: '1. What is 18 + 12?', options: ['28', '30', '32', '36'], answer: '30' },
+                { question: '2. Which is a noun?', options: ['Jump', 'Happy', 'Book', 'Run'], answer: 'Book' },
+                { question: '3. 9 x 3 = ?', options: ['18', '21', '24', '27'], answer: '27' },
+                { question: '4. Which word means the opposite of strong?', options: ['Weak', 'Tall', 'Fast', 'Light'], answer: 'Weak' },
+                { question: '5. Which sentence uses punctuation correctly?', options: ['Where are you going', 'Where are you going?', 'Where are you going!', 'where are you going?'], answer: 'Where are you going?' },
+                { question: '6. Solve: 20 - 9 = ?', options: ['9', '10', '11', '12'], answer: '11' },
+                { question: '7. Which is the plural of child?', options: ['Childs', 'Children', 'Childes', 'Childer'], answer: 'Children' },
+                { question: '8. What is the value of 5 in 65?', options: ['5', '50', '500', '0'], answer: '5' },
+                { question: '9. Which word means the same as big?', options: ['Small', 'Huge', 'Fast', 'Soft'], answer: 'Huge' },
+                { question: '10. 4 x 5 = ?', options: ['16', '18', '20', '24'], answer: '20' },
+                { question: '11. Find the sum: 36 + 14 = ?', options: ['42', '48', '50', '52'], answer: '50' },
+                { question: '12. Which sentence is in the past tense?', options: ['I play football.', 'I played football.', 'I am playing football.', 'I will play football.'], answer: 'I played football.' },
+                { question: '13. Which is the correct pronoun?', options: ['She', 'Chair', 'Blue', 'Jump'], answer: 'She' },
+                { question: '14. Solve: 7 x 6 = ?', options: ['36', '40', '42', '48'], answer: '42' },
+                { question: '15. Which is the correct spelling?', options: ['Schooll', 'Scool', 'School', 'Schol'], answer: 'School' },
+                { question: '16. What is the opposite of expensive?', options: ['Cheap', 'Tall', 'Heavy', 'Strong'], answer: 'Cheap' },
+                { question: '17. What is 28 ÷ 4?', options: ['6', '7', '8', '9'], answer: '7' },
+                { question: '18. Which of these is an adjective?', options: ['Teacher', 'Happy', 'Run', 'Flower'], answer: 'Happy' },
+                { question: '19. Round 67 to the nearest ten.', options: ['60', '70', '80', '90'], answer: '70' },
+                { question: '20. Which is the correct contraction of I am?', options: ['Im', 'I’m', 'Iam', 'Ima'], answer: 'I’m' },
+                { question: '21. What is 3/4 of 16?', options: ['8', '10', '12', '14'], answer: '12' },
+                { question: '22. Which number is not a prime number?', options: ['2', '3', '5', '4'], answer: '4' },
+                { question: '23. Choose the correct plural of fox.', options: ['Foxs', 'Foxes', 'Foxies', 'Foxeses'], answer: 'Foxes' },
+                { question: '24. Which sentence is correct?', options: ['They is riding bikes.', 'They are riding bikes.', 'They am riding bikes.', 'They riding bikes.'], answer: 'They are riding bikes.' },
+                { question: '25. What is 15 + 15?', options: ['20', '25', '30', '35'], answer: '30' },
+                { question: '26. Which word means the same as friend?', options: ['Enemy', 'Buddy', 'Tired', 'Happy'], answer: 'Buddy' },
+                { question: '27. Solve: 45 - 18 = ?', options: ['23', '27', '29', '31'], answer: '27' },
+                { question: '28. Which shape has 4 equal sides?', options: ['Triangle', 'Circle', 'Square', 'Rectangle'], answer: 'Square' },
+                { question: '29. What is 9 + 8?', options: ['15', '16', '17', '18'], answer: '17' },
+                { question: '30. The opposite of dark is?', options: ['Bright', 'Heavy', 'Slow', 'Cold'], answer: 'Bright' }
+            ],
+            'Primary Three': [
+                { question: '1. Solve: 48 ÷ 6 = ?', options: ['6', '7', '8', '9'], answer: '8' },
+                { question: '2. Which is the proper noun?', options: ['city', 'river', 'Lagos', 'school'], answer: 'Lagos' },
+                { question: '3. What is the value of 7 in 27?', options: ['7', '70', '700', '17'], answer: '7' },
+                { question: '4. Which is the correct plural of box?', options: ['boxs', 'boxes', 'boxies', 'boxez'], answer: 'boxes' },
+                { question: '5. A rectangle has', options: ['3 sides', '4 sides', '5 sides', '6 sides'], answer: '4 sides' },
+                { question: '6. Find the sum: 32 + 18 = ?', options: ['40', '45', '48', '50'], answer: '50' },
+                { question: '7. Which word is an adjective?', options: ['jump', 'red', 'run', 'book'], answer: 'red' },
+                { question: '8. Which sentence is capitalized correctly?', options: ['lagos is a city.', 'Lagos is a city.', 'Lagos Is A City.', 'lagos Is a city.'], answer: 'Lagos is a city.' },
+                { question: '9. What is 9 x 4?', options: ['32', '36', '40', '45'], answer: '36' },
+                { question: '10. A triangle has how many corners?', options: ['2', '3', '4', '5'], answer: '3' },
+                { question: '11. What is 56 ÷ 7?', options: ['7', '8', '9', '10'], answer: '8' },
+                { question: '12. Which sentence is correct?', options: ['He do his homework.', 'He does his homework.', 'He done his homework.', 'He doing his homework.'], answer: 'He does his homework.' },
+                { question: '13. What is the area of a square with sides 4 cm?', options: ['8 cm²', '12 cm²', '16 cm²', '20 cm²'], answer: '16 cm²' },
+                { question: '14. Choose the correct capitalization.', options: ['my name is jane.', 'My name is Jane.', 'My Name Is Jane.', 'my Name is jane.'], answer: 'My name is Jane.' },
+                { question: '15. Which is the verb in the sentence: The bird sings loudly?', options: ['bird', 'sings', 'loudly', 'the'], answer: 'sings' },
+                { question: '16. Solve: 74 - 19 = ?', options: ['45', '55', '60', '65'], answer: '55' },
+                { question: '17. Which word is an adverb?', options: ['quickly', 'book', 'chair', 'happy'], answer: 'quickly' },
+                { question: '18. What is 7 x 8?', options: ['48', '52', '54', '56'], answer: '56' },
+                { question: '19. Which is the correct plural of lady?', options: ['ladys', 'ladies', 'ladyes', 'lades'], answer: 'ladies' },
+                { question: '20. What is 0.5 as a fraction?', options: ['1/2', '1/4', '2/3', '1/5'], answer: '1/2' },
+                { question: '21. Find the perimeter of a rectangle 5m by 3m.', options: ['8m', '15m', '16m', '20m'], answer: '16m' },
+                { question: '22. Choose the correct pronoun: ___ is my friend.', options: ['He', 'Run', 'Book', 'Happy'], answer: 'He' },
+                { question: '23. Which is a common noun?', options: ['Lagos', 'Monday', 'School', 'Amina'], answer: 'School' },
+                { question: '24. What is 9 + 15?', options: ['20', '23', '24', '25'], answer: '24' },
+                { question: '25. Which sentence is in the future tense?', options: ['She danced well.', 'She dances well.', 'She will dance well.', 'She is dancing well.'], answer: 'She will dance well.' },
+                { question: '26. What is 11 x 3?', options: ['30', '32', '33', '36'], answer: '33' },
+                { question: '27. Which word is the opposite of weak?', options: ['Strong', 'Short', 'Small', 'Slow'], answer: 'Strong' },
+                { question: '28. What is 18 + 17?', options: ['32', '34', '35', '36'], answer: '35' },
+                { question: '29. Which is the correct spelling?', options: ['Teacher', 'Techer', 'Techre', 'Taecher'], answer: 'Teacher' },
+                { question: '30. What is the value of 6 in 64?', options: ['6', '60', '600', '6000'], answer: '60' }
+            ],
+            'Primary Four': [
+                { question: '1. What is the perimeter of a square with sides 5 cm?', options: ['10 cm', '15 cm', '20 cm', '25 cm'], answer: '20 cm' },
+                { question: '2. Which is a verb?', options: ['Chair', 'Jump', 'Blue', 'Table'], answer: 'Jump' },
+                { question: '3. 25 + 15 = ?', options: ['30', '35', '40', '45'], answer: '40' },
+                { question: '4. Which is the correct contraction for "I am"?', options: ['I’m', 'I amnt', 'Im', 'Iare'], answer: 'I’m' },
+                { question: '5. Which fraction is bigger?', options: ['1/3', '1/2', '1/4', '1/5'], answer: '1/2' },
+                { question: '6. 7 x 8 = ?', options: ['48', '52', '54', '56'], answer: '56' },
+                { question: '7. Which sentence is in the present tense?', options: ['She sang well.', 'She sings well.', 'She will sing well.', 'She had sung well.'], answer: 'She sings well.' },
+                { question: '8. The opposite of “cheap” is?', options: ['Expensive', 'Small', 'Light', 'Weak'], answer: 'Expensive' },
+                { question: '9. What is 3/5 of 20?', options: ['10', '12', '15', '18'], answer: '12' },
+                { question: '10. A cube has how many faces?', options: ['4', '6', '8', '10'], answer: '6' },
+                { question: '11. Solve: 84 ÷ 7 = ?', options: ['10', '11', '12', '13'], answer: '12' },
+                { question: '12. Which is an adjective in the sentence: The tall tree swayed in the wind?', options: ['tree', 'swayed', 'tall', 'wind'], answer: 'tall' },
+                { question: '13. What is the value of 8 in 48?', options: ['8', '40', '80', '48'], answer: '8' },
+                { question: '14. 24 + 17 = ?', options: ['35', '38', '39', '41'], answer: '41' },
+                { question: '15. What is 25% of 80?', options: ['10', '15', '20', '25'], answer: '20' },
+                { question: '16. Which is the correct spelling?', options: ['Beautiful', 'Beautifull', 'Bautiful', 'Beautifal'], answer: 'Beautiful' },
+                { question: '17. The area of a rectangle 7m by 3m is?', options: ['20m²', '21m²', '22m²', '24m²'], answer: '21m²' },
+                { question: '18. Which sentence is correct?', options: ['I am goed today.', 'I am going today.', 'I was go today.', 'I goes today.'], answer: 'I am going today.' },
+                { question: '19. Multiply: 12 x 6 = ?', options: ['60', '66', '68', '72'], answer: '72' },
+                { question: '20. Which word is a pronoun?', options: ['They', 'Table', 'Book', 'Chair'], answer: 'They' },
+                { question: '21. What is the perimeter of a rectangle 6cm by 2cm?', options: ['12cm', '16cm', '18cm', '20cm'], answer: '16cm' },
+                { question: '22. Which sentence is in the past tense?', options: ['She laughs.', 'She laughed.', 'She will laugh.', 'She is laughing.'], answer: 'She laughed.' },
+                { question: '23. What is 4/5 of 30?', options: ['20', '22', '24', '26'], answer: '24' },
+                { question: '24. Which word is the opposite of ancient?', options: ['New', 'Old', 'Tall', 'Wide'], answer: 'New' },
+                { question: '25. Solve: 3 x 9 + 4 = ?', options: ['27', '31', '32', '36'], answer: '31' },
+                { question: '26. Which fraction is equivalent to 1/2?', options: ['2/3', '3/6', '1/3', '2/5'], answer: '3/6' },
+                { question: '27. Which sentence is grammatically correct?', options: ['The children was playing.', 'The children were playing.', 'The children are played.', 'The children plays.'], answer: 'The children were playing.' },
+                { question: '28. What is 36 ÷ 9?', options: ['3', '4', '5', '6'], answer: '4' },
+                { question: '29. Choose the correct form: I ___ a book yesterday.', options: ['read', 'reads', 'reading', 'red'], answer: 'read' },
+                { question: '30. What is 17 + 19?', options: ['32', '34', '35', '36'], answer: '36' }
+            ],
+            'Primary Five': [
+                { question: '1. What is 3/4 of 20?', options: ['10', '12', '15', '18'], answer: '15' },
+                { question: '2. 15 x 4 = ?', options: ['45', '50', '55', '60'], answer: '60' },
+                { question: '3. Which is the adjective in: "The red ball rolled away."?', options: ['ball', 'rolled', 'red', 'away'], answer: 'red' },
+                { question: '4. Convert 2 hours to minutes.', options: ['60 minutes', '90 minutes', '120 minutes', '150 minutes'], answer: '120 minutes' },
+                { question: '5. The sum of angles in a triangle is?', options: ['90°', '180°', '270°', '360°'], answer: '180°' },
+                { question: '6. Solve: 48 ÷ 8 = ?', options: ['5', '6', '7', '8'], answer: '6' },
+                { question: '7. Which fraction is equivalent to 1/2?', options: ['2/3', '3/6', '1/4', '2/5'], answer: '3/6' },
+                { question: '8. What is 25% of 80?', options: ['10', '15', '20', '25'], answer: '20' },
+                { question: '9. Which word is a pronoun?', options: ['School', 'Blue', 'They', 'Jump'], answer: 'They' },
+                { question: '10. A circle has how many sides?', options: ['1', '2', '3', '0'], answer: '0' },
+                { question: '11. Simplify: 12/18 = ?', options: ['2/3', '3/4', '1/2', '2/5'], answer: '2/3' },
+                { question: '12. What is 7 x 9?', options: ['54', '56', '63', '72'], answer: '63' },
+                { question: '13. The perimeter of a square is 24 cm. What is each side?', options: ['4 cm', '5 cm', '6 cm', '8 cm'], answer: '6 cm' },
+                { question: '14. Which is the correct sentence?', options: ['She does not like apples.', 'She not like apples.', 'She does not likes apples.', 'She do not likes apples.'], answer: 'She does not like apples.' },
+                { question: '15. Which is the smallest prime number?', options: ['0', '1', '2', '3'], answer: '2' },
+                { question: '16. Convert 3/5 to a percentage.', options: ['30%', '50%', '60%', '75%'], answer: '60%' },
+                { question: '17. What is 20% of 150?', options: ['15', '20', '25', '30'], answer: '30' },
+                { question: '18. Solve: 36 + 18 = ?', options: ['48', '50', '52', '54'], answer: '54' },
+                { question: '19. Which word is an adverb?', options: ['Quickly', 'Book', 'River', 'Happy'], answer: 'Quickly' },
+                { question: '20. 14 x 5 = ?', options: ['60', '65', '70', '75'], answer: '70' },
+                { question: '21. What is the value of 5 in 5,482?', options: ['5', '50', '500', '5000'], answer: '5000' },
+                { question: '22. What is 9 - 4.5?', options: ['3.5', '4.5', '5.0', '5.5'], answer: '4.5' },
+                { question: '23. Which sentence is in the present continuous tense?', options: ['She watched the film.', 'She watches the film.', 'She is watching the film.', 'She will watch the film.'], answer: 'She is watching the film.' },
+                { question: '24. Find the average of 8, 10 and 12.', options: ['8', '9', '10', '11'], answer: '10' },
+                { question: '25. Solve: 15 + 9 x 2 = ?', options: ['24', '33', '39', '48'], answer: '33' },
+                { question: '26. What is 1/4 of 64?', options: ['12', '14', '16', '18'], answer: '16' },
+                { question: '27. Which shape has 8 sides?', options: ['Pentagon', 'Hexagon', 'Heptagon', 'Octagon'], answer: 'Octagon' },
+                { question: '28. What is the area of a rectangle 5m by 4m?', options: ['18m²', '20m²', '22m²', '24m²'], answer: '20m²' },
+                { question: '29. Solve: 72 ÷ 9 = ?', options: ['6', '7', '8', '9'], answer: '8' },
+                { question: '30. Which fraction is greater: 2/3 or 3/4?', options: ['2/3', '3/4', 'They are equal', 'Cannot tell'], answer: '3/4' }
+            ],
+            'Primary Six': [
+                { question: '1. Solve: 36 ÷ 9 + 4 = ?', options: ['8', '9', '10', '12'], answer: '8' },
+                { question: '2. Which sentence is in the past tense?', options: ['She plays football.', 'She played football.', 'She will play football.', 'She is playing football.'], answer: 'She played football.' },
+                { question: '3. What is 0.5 as a fraction?', options: ['1/2', '1/4', '2/5', '1/10'], answer: '1/2' },
+                { question: '4. Round 468 to the nearest hundred.', options: ['400', '460', '470', '500'], answer: '500' },
+                { question: '5. The area of a rectangle 6m by 4m is?', options: ['10m²', '20m²', '24m²', '30m²'], answer: '24m²' },
+                { question: '6. Solve: 15 + 9 × 2 = ?', options: ['24', '33', '39', '48'], answer: '33' },
+                { question: '7. Which is the smallest prime number?', options: ['0', '1', '2', '3'], answer: '2' },
+                { question: '8. What is 1/4 of 24?', options: ['4', '6', '8', '12'], answer: '6' },
+                { question: '9. Which sentence is grammatically correct?', options: ['He do his homework.', 'He does his homework.', 'He done his homework.', 'He doing his homework.'], answer: 'He does his homework.' },
+                { question: '10. The perimeter of a rectangle 5m by 3m is?', options: ['8m', '15m', '16m', '20m'], answer: '16m' },
+                { question: '11. Solve: 45 - 18 + 7 = ?', options: ['32', '34', '35', '36'], answer: '34' },
+                { question: '12. What is 1/3 of 27?', options: ['7', '8', '9', '10'], answer: '9' },
+                { question: '13. Which fraction is larger: 3/5 or 2/3?', options: ['3/5', '2/3', 'They are equal', 'Cannot tell'], answer: '2/3' },
+                { question: '14. A triangle has how many degrees in total?', options: ['90°', '180°', '270°', '360°'], answer: '180°' },
+                { question: '15. What is the square root of 81?', options: ['7', '8', '9', '10'], answer: '9' },
+                { question: '16. Solve: 8 x 7 + 5 = ?', options: ['51', '56', '61', '63'], answer: '61' },
+                { question: '17. Which is the correct adjective?', options: ['brave', 'run', 'chair', 'tree'], answer: 'brave' },
+                { question: '18. Convert 0.75 to a fraction.', options: ['3/4', '1/2', '5/8', '2/3'], answer: '3/4' },
+                { question: '19. Round 39 to the nearest ten.', options: ['30', '35', '40', '45'], answer: '40' },
+                { question: '20. Which sentence is in the future tense?', options: ['He was playing.', 'He is playing.', 'He will play.', 'He played.'], answer: 'He will play.' },
+                { question: '21. Solve: 6² = ?', options: ['12', '24', '36', '48'], answer: '36' },
+                { question: '22. A circle has how many diameters?', options: ['1', '2', '3', 'many'], answer: 'many' },
+                { question: '23. What is 25% of 120?', options: ['20', '25', '30', '35'], answer: '30' },
+                { question: '24. Which sentence is grammatically correct?', options: ['The girls are playing quietly.', 'The girls is playing quietly.', 'The girls was playing quietly.', 'The girls plays quietly.'], answer: 'The girls are playing quietly.' },
+                { question: '25. Find the product of 6 and 9.', options: ['42', '48', '54', '60'], answer: '54' },
+                { question: '26. What is 80 ÷ 5?', options: ['12', '14', '16', '18'], answer: '16' },
+                { question: '27. Which statement is true?', options: ['A rectangle has 3 sides.', 'A triangle has 4 sides.', 'A square has 4 equal sides.', 'A circle has 4 corners.'], answer: 'A square has 4 equal sides.' },
+                { question: '28. Solve: 9 + 3 × 4 = ?', options: ['21', '24', '27', '36'], answer: '21' },
+                { question: '29. What is the next number: 2, 4, 8, 16, ?', options: ['20', '24', '32', '40'], answer: '32' },
+                { question: '30. Find the perimeter of a square with side 7m.', options: ['14m', '21m', '28m', '35m'], answer: '28m' }
+            ]
+        };
+
+        const classSelect = document.getElementById('childClass');
+        const studentNameInput = document.getElementById('studentName');
+        const registrationNumberInput = document.getElementById('registrationNumber');
+        const loadExamBtn = document.getElementById('loadExamBtn');
+        const questionsDiv = document.getElementById('questions');
+        const submitArea = document.getElementById('submitArea');
+        const examForm = document.getElementById('examForm');
+        const resultBox = document.getElementById('resultBox');
+        const resultText = document.getElementById('resultText');
+        const timerDisplay = document.getElementById('timer');
+        const sendDetailsContainer = document.getElementById('sendDetailsContainer');
+        const sendDetailsBtn = document.getElementById('sendDetailsBtn');
+
+        const whatsappNumber = '2347036970253';
+        const verificationEmailAddress = 'kcreative@gmail.com';
+        let examTimer = null;
+        const examDurationSeconds = 10 * 60;
+
+        function generateRegistrationNumber() {
+            const year = new Date().getFullYear();
+            const randomNumber = Math.floor(10000 + Math.random() * 90000);
+            return 'KCS-' + year + '-' + randomNumber;
+        }
+
+        function ensureRegistrationNumber() {
+            if (!registrationNumberInput.value.trim()) {
+                registrationNumberInput.value = generateRegistrationNumber();
+            }
+            return registrationNumberInput.value.trim();
+        }
+
+        function generateVerificationCode() {
+            const randomCode = Math.random().toString(36).slice(2, 8).toUpperCase();
+            return 'KCS-' + randomCode;
+        }
+
+        function saveExamResult(studentName, registrationNumber, selectedClass, score, total, percentage, verificationCode) {
+            const resultEntry = {
+                studentName,
+                registrationNumber,
+                selectedClass,
+                score,
+                total,
+                percentage: percentage.toFixed(0),
+                verificationCode,
+                date: new Date().toISOString()
+            };
+
+            try {
+                const savedResults = JSON.parse(localStorage.getItem('kiddieExamResults') || '[]');
+                savedResults.push(resultEntry);
+                localStorage.setItem('kiddieExamResults', JSON.stringify(savedResults));
+            } catch (error) {
+                console.log('Local storage unavailable; results are shown only on screen.', error);
+            }
+
+            return verificationCode;
+        }
+
+        function formatTime(totalSeconds) {
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            return minutes + ':' + String(seconds).padStart(2, '0');
+        }
+
+        function updateTimerDisplay(totalSeconds) {
+            timerDisplay.textContent = 'Time Left: ' + formatTime(totalSeconds);
+            timerDisplay.classList.toggle('warning', totalSeconds <= 60);
+        }
+
+        function stopTimer() {
+            if (examTimer) {
+                clearInterval(examTimer);
+                examTimer = null;
+            }
+        }
+
+        function disableExamInputs() {
+            const inputs = examForm.querySelectorAll('input');
+            inputs.forEach((input) => {
+                input.disabled = true;
+            });
+            submitArea.style.display = 'none';
+        }
+
+        function finalizeExam(submittedByTimer = false) {
+            const selectedClass = classSelect.value;
+            const studentName = studentNameInput.value.trim();
+            const registrationNumber = registrationNumberInput.value.trim();
+            const items = questionBank[selectedClass] || [];
+            let score = 0;
+
+            items.forEach((item, index) => {
+                const selectedAnswer = examForm.querySelector('input[name="q' + index + '"]:checked');
+
+                if (selectedAnswer && selectedAnswer.value === item.answer) {
+                    score += 1;
+                }
+            });
+
+            const total = items.length;
+            const percentage = total ? (score / total) * 100 : 0;
+            const status = percentage >= 60 ? 'PASS' : 'FAIL';
+            const isPass = percentage >= 60;
+            const verificationCode = generateVerificationCode();
+
+            stopTimer();
+            disableExamInputs();
+            sendDetailsContainer.style.display = 'none';
+            sendDetailsBtn.href = '#';
+
+            saveExamResult(studentName, registrationNumber, selectedClass, score, total, percentage, verificationCode);
+
+            resultBox.classList.add('show');
+            resultText.innerHTML =
+                '<strong>Student:</strong> ' + studentName + '<br>' +
+                '<strong>Registration Number:</strong> ' + registrationNumber + '<br>' +
+                '<strong>Class:</strong> ' + selectedClass + '<br>' +
+                '<strong>Score:</strong> ' + score + ' / ' + total + ' (' + percentage.toFixed(0) + '%)<br>' +
+                '<strong>Status:</strong> ' + status + '<br>' +
+                '<strong>Verification Code:</strong> ' + verificationCode + '<br>' +
+                (submittedByTimer
+                    ? 'Time is up! The exam has been auto-submitted and saved locally on this device.'
+                    : (isPass
+                        ? 'The child is performing well for this class level. The result has been saved locally on this device.'
+                        : 'The child may need more support in this class level. The result has been saved locally on this device.'));
+        }
+
+        function startTimer() {
+            stopTimer();
+            let timeLeft = examDurationSeconds;
+            timerDisplay.style.display = 'block';
+            updateTimerDisplay(timeLeft);
+
+            const startTime = Date.now();
+            examTimer = setInterval(() => {
+                const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+                const remainingTime = examDurationSeconds - elapsedSeconds;
+
+                if (remainingTime <= 0) {
+                    updateTimerDisplay(0);
+                    finalizeExam(true);
+                    return;
+                }
+
+                updateTimerDisplay(remainingTime);
+            }, 1000);
+        }
+
+        function buildQuestions(selectedClass) {
+            const items = questionBank[selectedClass] || [];
+            questionsDiv.innerHTML = '';
+            resultBox.classList.remove('show');
+
+            if (!items.length) {
+                questionsDiv.classList.remove('visible');
+                submitArea.style.display = 'none';
+                timerDisplay.style.display = 'none';
+                stopTimer();
+                return;
+            }
+
+            items.forEach((item, index) => {
+                const questionWrap = document.createElement('div');
+                questionWrap.className = 'question';
+
+                const questionTitle = document.createElement('h3');
+                questionTitle.textContent = item.question;
+                questionWrap.appendChild(questionTitle);
+
+                const optionsWrap = document.createElement('div');
+                optionsWrap.className = 'options';
+
+                item.options.forEach((option) => {
+                    const optionLabel = document.createElement('label');
+                    const radio = document.createElement('input');
+                    radio.type = 'radio';
+                    radio.name = 'q' + index;
+                    radio.value = option;
+
+                    optionLabel.appendChild(radio);
+                    optionLabel.appendChild(document.createTextNode(option));
+                    optionsWrap.appendChild(optionLabel);
+                });
+
+                questionWrap.appendChild(optionsWrap);
+                questionsDiv.appendChild(questionWrap);
+            });
+
+            questionsDiv.classList.add('visible');
+            submitArea.style.display = 'block';
+            startTimer();
+        }
+
+        loadExamBtn.addEventListener('click', function () {
+            const selectedClass = classSelect.value;
+            const studentName = studentNameInput.value.trim();
+            const registrationNumber = ensureRegistrationNumber();
+
+            if (!studentName) {
+                resultBox.classList.add('show');
+                resultText.textContent = 'Please enter the student name before loading the exam.';
+                return;
+            }
+
+            if (!selectedClass) {
+                resultBox.classList.add('show');
+                resultText.textContent = 'Please select the child\'s class first.';
+                return;
+            }
+
+            registrationNumberInput.value = registrationNumber;
+            resultBox.classList.remove('show');
+            buildQuestions(selectedClass);
+        });
+
+        examForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const selectedClass = classSelect.value;
+            const studentName = studentNameInput.value.trim();
+            const registrationNumber = ensureRegistrationNumber();
+
+            if (!studentName) {
+                resultBox.classList.add('show');
+                resultText.textContent = 'Please complete the student name before submitting.';
+                return;
+            }
+
+            if (!selectedClass) {
+                resultBox.classList.add('show');
+                resultText.textContent = 'Please select the child\'s class and load the exam.';
+                return;
+            }
+
+            const items = questionBank[selectedClass] || [];
+            let score = 0;
+
+            items.forEach((item, index) => {
+                const selectedAnswer = examForm.querySelector('input[name="q' + index + '"]:checked');
+
+                if (selectedAnswer && selectedAnswer.value === item.answer) {
+                    score += 1;
+                }
+            });
+
+            const total = items.length;
+            const percentage = total ? (score / total) * 100 : 0;
+            const status = percentage >= 60 ? 'PASS' : 'FAIL';
+            const isPass = percentage >= 60;
+            const verificationCode = generateVerificationCode();
+
+            stopTimer();
+            sendDetailsContainer.style.display = 'none';
+            sendDetailsBtn.href = '#';
+
+            saveExamResult(studentName, registrationNumber, selectedClass, score, total, percentage, verificationCode);
+
+            resultBox.classList.add('show');
+            resultText.innerHTML =
+                '<strong>Student:</strong> ' + studentName + '<br>' +
+                '<strong>Registration Number:</strong> ' + registrationNumber + '<br>' +
+                '<strong>Class:</strong> ' + selectedClass + '<br>' +
+                '<strong>Score:</strong> ' + score + ' / ' + total + ' (' + percentage.toFixed(0) + '%)<br>' +
+                '<strong>Status:</strong> ' + status + '<br>' +
+                '<strong>Verification Code:</strong> ' + verificationCode + '<br>' +
+                (isPass
+                    ? 'The child is performing well for this class level. The result has been saved locally on this device.'
+                    : 'The child may need more support in this class level. The result has been saved locally on this device.');
+        });
+    </script>
+</body>
+
+</html>

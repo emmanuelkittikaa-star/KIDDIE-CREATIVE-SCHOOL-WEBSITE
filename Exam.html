@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Exam | Kiddie Creative School</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #e0f7ff, #fff3bf);
+            color: #1f1f2e;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .exam-box {
+            background: #fff;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            text-align: center;
+            color: #3b2a63;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #54456f;
+        }
+
+        .question {
+            margin-bottom: 28px;
+            padding: 18px;
+            border: 1px solid #eae2ff;
+            border-radius: 12px;
+            background: #faf7ff;
+        }
+
+        .question h3 {
+            margin: 0 0 12px;
+            font-size: 1.05rem;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .options label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            border-radius: 8px;
+            background: #fff;
+            border: 1px solid #ddd;
+            cursor: pointer;
+        }
+
+        .options input {
+            accent-color: #5b3b9a;
+        }
+
+        .controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        button {
+            border: none;
+            background: #5b3b9a;
+            color: white;
+            padding: 14px 30px;
+            border-radius: 999px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #492d7d;
+        }
+
+        .result {
+            margin-top: 25px;
+            padding: 18px;
+            border-radius: 12px;
+            background: #f3f7ff;
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+        }
+
+        .result h2 {
+            margin-top: 0;
+            color: #2a4d7a;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="exam-box">
+            <h1>Student Placement Exam</h1>
+            <p class="subtitle">Answer the questions below and we will suggest the best class for your child.</p>
+
+            <form id="examForm">
+                <div class="question">
+                    <h3>1. Which of these tasks is easiest for the child?</h3>
+                    <div class="options">
+                        <label><input type="radio" name="q1" value="a"> Counting objects and sorting them</label>
+                        <label><input type="radio" name="q1" value="b"> Identifying colours and basic shapes</label>
+                        <label><input type="radio" name="q1" value="c"> Reading short sentences</label>
+                        <label><input type="radio" name="q1" value="d"> Solving word problems</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>2. How does the child respond to classroom instructions?</h3>
+                    <div class="options">
+                        <label><input type="radio" name="q2" value="a"> Needs close support and guidance</label>
+                        <label><input type="radio" name="q2" value="b"> Follows simple step-by-step instructions</label>
+                        <label><input type="radio" name="q2" value="c"> Understands and follows multiple steps</label>
+                        <label><input type="radio" name="q2" value="d"> Works independently with confidence</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>3. What is the child best at?</h3>
+                    <div class="options">
+                        <label><input type="radio" name="q3" value="a"> Recognising familiar sounds and words</label>
+                        <label><input type="radio" name="q3" value="b"> Writing basic letters and numbers</label>
+                        <label><input type="radio" name="q3" value="c"> Reading simple passages</label>
+                        <label><input type="radio" name="q3" value="d"> Completing structured reading and writing
+                            tasks</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>4. How does the child handle group learning?</h3>
+                    <div class="options">
+                        <label><input type="radio" name="q4" value="a"> Prefers direct adult attention</label>
+                        <label><input type="radio" name="q4" value="b"> Works well in small guided groups</label>
+                        <label><input type="radio" name="q4" value="c"> Participates actively in class
+                            activities</label>
+                        <label><input type="radio" name="q4" value="d"> Leads group tasks and helps others</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>5. Which level of writing is the child comfortable with?</h3>
+                    <div class="options">
+                        <label><input type="radio" name="q5" value="a"> Tracing and copying simple forms</label>
+                        <label><input type="radio" name="q5" value="b"> Writing letters and short words</label>
+                        <label><input type="radio" name="q5" value="c"> Writing complete sentences</label>
+                        <label><input type="radio" name="q5" value="d"> Writing paragraphs and assignments</label>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button type="submit">Submit Exam</button>
+                </div>
+            </form>
+
+            <div id="resultBox" class="result">
+                <h2>Exam Result</h2>
+                <p id="resultText"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const examForm = document.getElementById('examForm');
+        const resultBox = document.getElementById('resultBox');
+        const resultText = document.getElementById('resultText');
+
+        examForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const answers = {
+                q1: examForm.q1.value,
+                q2: examForm.q2.value,
+                q3: examForm.q3.value,
+                q4: examForm.q4.value,
+                q5: examForm.q5.value
+            };
+
+            const unanswered = Object.keys(answers).filter((key) => !answers[key]);
+
+            if (unanswered.length > 0) {
+                resultBox.classList.add('show');
+                resultText.textContent = 'Please answer all questions before submitting the exam.';
+                return;
+            }
+
+            let score = 0;
+
+            if (answers.q1 === 'b' || answers.q1 === 'a') score += 1;
+            if (answers.q2 === 'b' || answers.q2 === 'a') score += 1;
+            if (answers.q3 === 'b' || answers.q3 === 'a') score += 1;
+            if (answers.q4 === 'b' || answers.q4 === 'a') score += 1;
+            if (answers.q5 === 'b' || answers.q5 === 'a') score += 1;
+
+            let recommendation = 'Daycare';
+
+            if (score >= 4) recommendation = 'Kindergarten';
+            if (score >= 5) recommendation = 'Primary One';
+            if (score >= 6) recommendation = 'Primary Two to Four';
+            if (score >= 7) recommendation = 'Primary Five or Six';
+
+            resultBox.classList.add('show');
+            resultText.textContent = 'Your score: ' + score + '/5. The suggested class is: ' + recommendation + '.';
+        });
+    </script>
+</body>
+
+</html>
