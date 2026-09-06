@@ -638,6 +638,7 @@
 
     <script>
         const ADMIN_KEY = '10001000';
+        const FEE_STORAGE_VERSION = 'v2';
         const schoolFees = {
             "daycare-tuition": 1800,
             "daycare-books": 450,
@@ -645,7 +646,7 @@
             "daycare-paces": 200,
             "daycare-field-trip": 250,
             "daycare-library": 150,
-            "daycare-total": 2350,
+            "daycare-total": 20000,
             "creche-tuition": 2200,
             "creche-books": 500,
             "creche-uniform": 350,
@@ -728,7 +729,7 @@
 
         feeInputs.forEach(function (input) {
             const feeKey = input.dataset.fee;
-            const savedAmount = localStorage.getItem("school-fee-" + feeKey);
+            const savedAmount = localStorage.getItem("school-fee-" + FEE_STORAGE_VERSION + "-" + feeKey);
             const defaultValue = Object.prototype.hasOwnProperty.call(schoolFees, feeKey)
                 ? schoolFees[feeKey]
                 : 0;
@@ -737,7 +738,7 @@
             input.disabled = true;
 
             input.addEventListener("input", function () {
-                localStorage.setItem("school-fee-" + feeKey, input.value);
+                localStorage.setItem("school-fee-" + FEE_STORAGE_VERSION + "-" + feeKey, input.value);
             });
         });
 
