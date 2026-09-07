@@ -640,10 +640,14 @@
                 });
 
                 if (!response.ok) {
-                    throw new Error('Email alert failed.');
+                    const errorDetails = await response.json().catch(() => ({}));
+                    throw new Error(errorDetails.error || 'Email alert failed.');
                 }
+
+                return true;
             } catch (error) {
                 console.error('Exam result email was not sent:', error);
+                return false;
             }
         }
 
@@ -673,7 +677,7 @@
             submitArea.style.display = 'none';
         }
 
-        function finalizeExam(submittedByTimer = false) {
+        async function finalizeExam(submittedByTimer = false) {
             const selectedClass = classSelect.value;
             const studentName = studentNameInput.value.trim();
             const registrationNumber = registrationNumberInput.value.trim();
@@ -700,7 +704,7 @@
             sendDetailsBtn.href = '#';
 
             saveExamResult(studentName, registrationNumber, selectedClass, score, total, percentage, verificationCode);
-            sendExamResultEmail(studentName, registrationNumber, selectedClass, score, total, percentage, status, verificationCode, submittedByTimer);
+            const emailSent = await sendExamResultEmail(studentName, registrationNumber, selectedClass, score, total, percentage, status, verificationCode, submittedByTimer);
 
             resultBox.classList.add('show');
             resultText.innerHTML =
@@ -710,11 +714,14 @@
                 '<strong>Score:</strong> ' + score + ' / ' + total + ' (' + percentage.toFixed(0) + '%)<br>' +
                 '<strong>Status:</strong> ' + status + '<br>' +
                 '<strong>Verification Code:</strong> ' + verificationCode + '<br>' +
+                (emailSent
+                    ? '<strong>Email alert:</strong> Sent to emmanuelkittikaa@gmail.com<br>'
+                    : '<strong>Email alert:</strong> Not sent. The Vercel email settings need to be checked.<br>') +
                 (submittedByTimer
-                    ? 'Time is up! The exam was auto-submitted and the email alert was triggered.'
+                    ? 'Time is up! The exam was auto-submitted.'
                     : (isPass
-                        ? 'The child is performing well for this class level. The email alert was triggered.'
-                        : 'The child may need more support in this class level. The email alert was triggered.'));
+                        ? 'The child is performing well for this class level.'
+                        : 'The child may need more support in this class level.'));
         }
 
         function startTimer() {
@@ -846,7 +853,11 @@
             sendDetailsBtn.href = '#';
 
             saveExamResult(studentName, registrationNumber, selectedClass, score, total, percentage, verificationCode);
-            sendExamResultEmail(studentName, registrationNumber, selectedClass, score, total, percentage, status, verificationCode, false);
+            sendExamResultEmail(studentName, registrationNumber, selectedClass, score, total, percentage, status, verificationCode, false).then(function (emailSent) {
+                resultText.innerHTML += emailSent
+                    ? '<br><strong>Email alert:</strong> Sent to emmanuelkittikaa@gmail.com'
+                    : '<br><strong>Email alert:</strong> Not sent. The Vercel email settings need to be checked.';
+            });
 
             resultBox.classList.add('show');
             resultText.innerHTML =
@@ -857,8 +868,8 @@
                 '<strong>Status:</strong> ' + status + '<br>' +
                 '<strong>Verification Code:</strong> ' + verificationCode + '<br>' +
                 (isPass
-                    ? 'The child is performing well for this class level. The email alert was triggered.'
-                    : 'The child may need more support in this class level. The email alert was triggered.');
+                    ? 'The child is performing well for this class level. Sending the email alert...'
+                    : 'The child may need more support in this class level. Sending the email alert...');
         });
     </script>
 </body>
