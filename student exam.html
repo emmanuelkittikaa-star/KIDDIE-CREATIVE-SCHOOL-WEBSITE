@@ -575,7 +575,7 @@
         const sendDetailsBtn = document.getElementById('sendDetailsBtn');
 
         const whatsappNumber = '2347036970253';
-        const verificationEmailAddress = 'kcreative@gmail.com';
+        const verificationEmailAddress = 'emmanuelkittikaa@gmail.com';
         let examTimer = null;
         const examDurationSeconds = 10 * 60;
 
@@ -618,6 +618,33 @@
             }
 
             return verificationCode;
+        }
+
+        async function sendExamResultEmail(studentName, registrationNumber, selectedClass, score, total, percentage, status, verificationCode, submittedByTimer) {
+            try {
+                const response = await fetch('/api/send-exam-result', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    keepalive: true,
+                    body: JSON.stringify({
+                        studentName,
+                        registrationNumber,
+                        selectedClass,
+                        score,
+                        total,
+                        percentage,
+                        status,
+                        verificationCode,
+                        submittedByTimer
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Email alert failed.');
+                }
+            } catch (error) {
+                console.error('Exam result email was not sent:', error);
+            }
         }
 
         function formatTime(totalSeconds) {
@@ -673,6 +700,7 @@
             sendDetailsBtn.href = '#';
 
             saveExamResult(studentName, registrationNumber, selectedClass, score, total, percentage, verificationCode);
+            sendExamResultEmail(studentName, registrationNumber, selectedClass, score, total, percentage, status, verificationCode, submittedByTimer);
 
             resultBox.classList.add('show');
             resultText.innerHTML =
@@ -683,10 +711,10 @@
                 '<strong>Status:</strong> ' + status + '<br>' +
                 '<strong>Verification Code:</strong> ' + verificationCode + '<br>' +
                 (submittedByTimer
-                    ? 'Time is up! The exam has been auto-submitted and saved locally on this device.'
+                    ? 'Time is up! The exam was auto-submitted and the email alert was triggered.'
                     : (isPass
-                        ? 'The child is performing well for this class level. The result has been saved locally on this device.'
-                        : 'The child may need more support in this class level. The result has been saved locally on this device.'));
+                        ? 'The child is performing well for this class level. The email alert was triggered.'
+                        : 'The child may need more support in this class level. The email alert was triggered.'));
         }
 
         function startTimer() {
@@ -818,6 +846,7 @@
             sendDetailsBtn.href = '#';
 
             saveExamResult(studentName, registrationNumber, selectedClass, score, total, percentage, verificationCode);
+            sendExamResultEmail(studentName, registrationNumber, selectedClass, score, total, percentage, status, verificationCode, false);
 
             resultBox.classList.add('show');
             resultText.innerHTML =
@@ -828,8 +857,8 @@
                 '<strong>Status:</strong> ' + status + '<br>' +
                 '<strong>Verification Code:</strong> ' + verificationCode + '<br>' +
                 (isPass
-                    ? 'The child is performing well for this class level. The result has been saved locally on this device.'
-                    : 'The child may need more support in this class level. The result has been saved locally on this device.');
+                    ? 'The child is performing well for this class level. The email alert was triggered.'
+                    : 'The child may need more support in this class level. The email alert was triggered.');
         });
     </script>
 </body>
