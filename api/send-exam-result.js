@@ -31,6 +31,19 @@ export default async function handler(request, response) {
     ].join('\n');
 
     try {
+        await saveExamResult({
+            studentName,
+            registrationNumber,
+            selectedClass,
+            score,
+            total,
+            percentage,
+            status,
+            verificationCode,
+            submittedByTimer,
+            submittedAt: new Date().toISOString()
+        });
+
         const emailResponse = await fetch('https://api.resend.com/emails', {
             method: 'POST',
             headers: {
@@ -54,5 +67,38 @@ export default async function handler(request, response) {
         return response.status(200).json({ sent: true, id: emailData.id });
     } catch (error) {
         return response.status(500).json({ error: 'Could not send exam alert.' });
+    }
+}
+
+async function saveExamResult(result) {
+    const url = process.env.KV_REST_API_URL;
+    const token = process.env.KV_REST_API_TOKEN;
+    if (!url || !token) {
+        return;
+    }
+
+    const readResponse = await fetch(url + '/get/kcs_exam_results', {
+        headers: { Authorization: 'Bearer ' + token }
+    });
+    if (!readResponse.ok) {
+        throw new Error('Could not read exam results.');
+    }
+
+    const data = await readResponse.json();
+    const results = data.result
+        ? (typeof data.result === 'string' ? JSON.parse(data.result) : data.result)
+        : [];
+    results.unshift(result);
+
+    const writeResponse = await fetch(url + '/set/kcs_exam_results', {
+        method: 'POST',
+        headers: {
+            Authorization: 'Bearer ' + token,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(results.slice(0, 200))
+    });
+    if (!writeResponse.ok) {
+        throw new Error('Could not save exam result.');
     }
 }

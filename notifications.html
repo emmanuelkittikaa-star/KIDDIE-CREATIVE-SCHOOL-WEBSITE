@@ -88,6 +88,48 @@
         .admin-form[hidden] {
             display: none;
         }
+
+        .results-panel {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 2px solid #b9c2cc;
+        }
+
+        .results-summary {
+            padding: 14px;
+            background: #e8f1f2;
+            color: var(--navy);
+            font-size: 1.15rem;
+            font-weight: bold;
+        }
+
+        .results-table-wrap {
+            overflow-x: auto;
+        }
+
+        .results-table {
+            width: 100%;
+            margin-top: 14px;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        .results-table th,
+        .results-table td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #d5dce2;
+            text-align: left;
+        }
+
+        .results-table th {
+            background: var(--navy);
+            color: white;
+        }
+
+        .refresh-button {
+            margin-top: 10px;
+            background: var(--red);
+        }
     </style>
 </head>
 
@@ -112,6 +154,27 @@
             <p id="status" role="status"></p>
         </form>
 
+        <section id="resultsPanel" class="results-panel" hidden>
+            <h2>Submitted Tests</h2>
+            <div id="resultsSummary" class="results-summary">Loading results...</div>
+            <div class="results-table-wrap">
+                <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Class</th>
+                            <th>Score</th>
+                            <th>Percent</th>
+                            <th>Status</th>
+                            <th>Submitted</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultsBody"></tbody>
+                </table>
+            </div>
+            <button id="refreshResultsButton" class="refresh-button" type="button">Refresh results</button>
+        </section>
+
         <a class="home-link" href="index.html">Back to website</a>
     </main>
 
@@ -121,7 +184,49 @@
         const adminForm = document.getElementById('adminForm');
         const unlockButton = document.getElementById('unlockButton');
         const status = document.getElementById('status');
+        const resultsPanel = document.getElementById('resultsPanel');
+        const resultsSummary = document.getElementById('resultsSummary');
+        const resultsBody = document.getElementById('resultsBody');
+        const refreshResultsButton = document.getElementById('refreshResultsButton');
         let adminPassword = '';
+
+        function renderResults(results) {
+            resultsSummary.textContent = results.activeCount + ' student' + (results.activeCount === 1 ? ' is' : 's are') + ' currently taking a test. ' + results.results.length + ' test' + (results.results.length === 1 ? ' has' : 's have') + ' been submitted.';
+            resultsBody.replaceChildren();
+
+            results.results.forEach(function (result) {
+                const row = document.createElement('tr');
+                [
+                    result.studentName,
+                    result.selectedClass,
+                    result.score + ' / ' + result.total,
+                    Number(result.percentage).toFixed(0) + '%',
+                    result.status,
+                    new Date(result.submittedAt).toLocaleString()
+                ].forEach(function (value) {
+                    const cell = document.createElement('td');
+                    cell.textContent = value;
+                    row.appendChild(cell);
+                });
+                resultsBody.appendChild(row);
+            });
+        }
+
+        async function loadResults() {
+            resultsSummary.textContent = 'Loading results...';
+            try {
+                const response = await fetch('/api/exam-results', {
+                    headers: { 'x-admin-password': adminPassword }
+                });
+                const result = await response.json();
+                if (!response.ok) {
+                    throw new Error(result.error || 'Could not load results.');
+                }
+                renderResults(result);
+            } catch (error) {
+                resultsSummary.textContent = error.message;
+            }
+        }
 
         unlockButton.addEventListener('click', function () {
             if (passwordInput.value !== 'KCS2009') {
@@ -133,8 +238,12 @@
             passwordInput.disabled = true;
             unlockButton.hidden = true;
             adminForm.hidden = false;
+            resultsPanel.hidden = false;
             status.textContent = '';
+            loadResults();
         });
+
+        refreshResultsButton.addEventListener('click', loadResults);
 
         form.addEventListener('submit', async function (event) {
             event.preventDefault();

@@ -577,6 +577,8 @@
         const whatsappNumber = '2347036970253';
         const verificationEmailAddress = 'emmanuelkittikaa@gmail.com';
         let examTimer = null;
+        let presenceTimer = null;
+        const examSessionId = 'exam-' + Math.random().toString(36).slice(2) + Date.now();
         const examDurationSeconds = 10 * 60;
 
         function generateRegistrationNumber() {
@@ -667,6 +669,22 @@
                 clearInterval(examTimer);
                 examTimer = null;
             }
+            if (presenceTimer) {
+                clearInterval(presenceTimer);
+                presenceTimer = null;
+            }
+            fetch('/api/exam-presence', {
+                method: 'DELETE',
+                keepalive: true,
+                headers: { 'x-exam-session': examSessionId }
+            }).catch(function () { });
+        }
+
+        function updateExamPresence() {
+            fetch('/api/exam-presence', {
+                method: 'POST',
+                headers: { 'x-exam-session': examSessionId }
+            }).catch(function () { });
         }
 
         function disableExamInputs() {
@@ -726,6 +744,7 @@
 
         function startTimer() {
             stopTimer();
+            updateExamPresence();
             let timeLeft = examDurationSeconds;
             timerDisplay.style.display = 'block';
             updateTimerDisplay(timeLeft);
@@ -743,6 +762,8 @@
 
                 updateTimerDisplay(remainingTime);
             }, 1000);
+
+            presenceTimer = setInterval(updateExamPresence, 20000);
         }
 
         function buildQuestions(selectedClass) {

@@ -24,6 +24,8 @@ After adding the variables, redeploy the project. The email service must be conf
 
 The home page displays notifications published from `notifications.html`. Open the **Admin notifications** link on the home page and unlock it with `KCS2009`.
 
+The same admin page shows the number of submitted tests and each student's score. Results are stored in the same shared database when the exam is submitted.
+
 For notifications to be shared with all visitors, connect a Vercel KV or Upstash Redis store and add these Vercel environment variables:
 
 - `KV_REST_API_URL`: the store REST URL
