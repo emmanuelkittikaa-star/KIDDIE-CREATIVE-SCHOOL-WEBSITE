@@ -130,6 +130,39 @@
             margin-top: 10px;
             background: var(--red);
         }
+
+        .notifications-panel {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 2px solid #b9c2cc;
+        }
+
+        .sent-notification {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 14px 0;
+            border-bottom: 1px solid #d5dce2;
+        }
+
+        .sent-notification p {
+            margin: 4px 0 0;
+            color: #555;
+        }
+
+        .delete-button {
+            flex-shrink: 0;
+            margin-top: 0;
+            background: #8f1d2c;
+        }
+
+        @media (max-width: 560px) {
+            .sent-notification {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
     </style>
 </head>
 
@@ -153,6 +186,11 @@
             <button id="unlockButton" type="button">Unlock</button>
             <p id="status" role="status"></p>
         </form>
+
+        <section id="notificationsPanel" class="notifications-panel" hidden>
+            <h2>Sent Notifications</h2>
+            <div id="sentNotifications" aria-live="polite"></div>
+        </section>
 
         <section id="resultsPanel" class="results-panel">
             <h2>Submitted Tests</h2>
@@ -192,7 +230,84 @@
         const resultsContent = document.getElementById('resultsContent');
         const resultsBody = document.getElementById('resultsBody');
         const refreshResultsButton = document.getElementById('refreshResultsButton');
+        const notificationsPanel = document.getElementById('notificationsPanel');
+        const sentNotifications = document.getElementById('sentNotifications');
         let adminPassword = '';
+
+        function renderNotifications(notifications) {
+            sentNotifications.replaceChildren();
+
+            if (!notifications.length) {
+                sentNotifications.textContent = 'No sent notifications.';
+                return;
+            }
+
+            notifications.forEach(function (notification) {
+                const item = document.createElement('article');
+                item.className = 'sent-notification';
+
+                const details = document.createElement('div');
+                const title = document.createElement('strong');
+                title.textContent = notification.title;
+                details.appendChild(title);
+
+                const date = document.createElement('p');
+                date.textContent = new Date(notification.createdAt).toLocaleString();
+                details.appendChild(date);
+                item.appendChild(details);
+
+                const deleteButton = document.createElement('button');
+                deleteButton.className = 'delete-button';
+                deleteButton.type = 'button';
+                deleteButton.textContent = 'Delete';
+                deleteButton.addEventListener('click', function () {
+                    deleteNotification(notification.createdAt);
+                });
+                item.appendChild(deleteButton);
+
+                sentNotifications.appendChild(item);
+            });
+        }
+
+        async function loadNotifications() {
+            try {
+                const response = await fetch('/api/notifications');
+                const notifications = await response.json();
+                if (!response.ok) {
+                    throw new Error(notifications.error || 'Could not load notifications.');
+                }
+                renderNotifications(notifications);
+                notificationsPanel.hidden = false;
+            } catch (error) {
+                sentNotifications.textContent = error.message;
+                notificationsPanel.hidden = false;
+            }
+        }
+
+        async function deleteNotification(createdAt) {
+            if (!window.confirm('Delete this notification for all visitors?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/notifications', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-admin-password': adminPassword
+                    },
+                    body: JSON.stringify({ createdAt: createdAt })
+                });
+                const result = await response.json();
+                if (!response.ok) {
+                    throw new Error(result.error || 'Could not delete notification.');
+                }
+                status.textContent = 'Notification deleted.';
+                await loadNotifications();
+            } catch (error) {
+                status.textContent = error.message;
+            }
+        }
 
         function renderResults(results) {
             resultsSummary.textContent = results.activeCount + ' student' + (results.activeCount === 1 ? ' is' : 's are') + ' currently taking a test. ' + results.results.length + ' test' + (results.results.length === 1 ? ' has' : 's have') + ' been submitted.';
@@ -252,6 +367,7 @@
             passwordInput.disabled = true;
             unlockButton.hidden = true;
             adminForm.hidden = false;
+            await loadNotifications();
             status.textContent = '';
         });
 

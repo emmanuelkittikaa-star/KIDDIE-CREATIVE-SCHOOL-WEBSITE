@@ -53,13 +53,36 @@ export default async function handler(request, response) {
         }
     }
 
-    if (request.method !== 'POST') {
+    if (request.method !== 'POST' && request.method !== 'DELETE') {
         return response.status(405).json({ error: 'Method not allowed' });
     }
 
     const expectedPassword = process.env.NOTIFICATIONS_PASSWORD || 'KCS2009';
     if (request.headers['x-admin-password'] !== expectedPassword) {
         return response.status(401).json({ error: 'Incorrect password.' });
+    }
+
+    if (request.method === 'DELETE') {
+        const { createdAt } = request.body || {};
+        if (typeof createdAt !== 'string' || !createdAt) {
+            return response.status(400).json({ error: 'Notification date is required.' });
+        }
+
+        try {
+            const notifications = await readNotifications();
+            const remainingNotifications = notifications.filter(function (notification) {
+                return notification.createdAt !== createdAt;
+            });
+
+            if (remainingNotifications.length === notifications.length) {
+                return response.status(404).json({ error: 'Notification not found.' });
+            }
+
+            await writeNotifications(remainingNotifications);
+            return response.status(200).json({ deleted: true });
+        } catch (error) {
+            return response.status(503).json({ error: 'Notification storage is not configured.' });
+        }
     }
 
     const { title, message } = request.body || {};
