@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications Admin | Kiddie Creative School</title>
+    <style>
+        :root {
+            --navy: #1d3557;
+            --red: #e63946;
+            --paper: #fffdf7;
+            --ink: #17202a;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            color: var(--ink);
+            background: linear-gradient(135deg, #f7d794, #f8f9fa 55%, #a8dadc);
+            font-family: Georgia, "Times New Roman", serif;
+        }
+
+        main {
+            width: min(720px, calc(100% - 32px));
+            margin: 40px auto;
+            padding: 28px;
+            background: rgba(255, 253, 247, 0.96);
+            border: 3px solid var(--navy);
+            border-radius: 18px;
+            box-shadow: 0 14px 30px rgba(29, 53, 87, 0.2);
+        }
+
+        h1 {
+            color: var(--navy);
+        }
+
+        label {
+            display: block;
+            margin: 16px 0 6px;
+            font-weight: bold;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #b9c2cc;
+            border-radius: 8px;
+            font: inherit;
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        button,
+        .home-link {
+            display: inline-block;
+            margin-top: 18px;
+            padding: 12px 18px;
+            border: 0;
+            border-radius: 999px;
+            background: var(--navy);
+            color: white;
+            font: inherit;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        button:hover,
+        .home-link:hover {
+            background: var(--red);
+        }
+
+        #status {
+            min-height: 1.4em;
+            color: var(--red);
+            font-weight: bold;
+        }
+
+        .admin-form[hidden] {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <h1>Send a School Notification</h1>
+        <p>Publish an announcement that visitors will see in the Notifications section on the home page.</p>
+
+        <form id="notificationForm">
+            <label for="password">Admin password</label>
+            <input id="password" type="password" autocomplete="current-password" required>
+
+            <div id="adminForm" class="admin-form" hidden>
+                <label for="title">Notification title</label>
+                <input id="title" maxlength="120" required>
+
+                <label for="message">Message</label>
+                <textarea id="message" maxlength="2000" required></textarea>
+                <button type="submit">Publish notification</button>
+            </div>
+            <button id="unlockButton" type="button">Unlock</button>
+            <p id="status" role="status"></p>
+        </form>
+
+        <a class="home-link" href="index.html">Back to website</a>
+    </main>
+
+    <script>
+        const form = document.getElementById('notificationForm');
+        const passwordInput = document.getElementById('password');
+        const adminForm = document.getElementById('adminForm');
+        const unlockButton = document.getElementById('unlockButton');
+        const status = document.getElementById('status');
+        let adminPassword = '';
+
+        unlockButton.addEventListener('click', function () {
+            if (passwordInput.value !== 'KCS2009') {
+                status.textContent = 'Incorrect password.';
+                return;
+            }
+
+            adminPassword = passwordInput.value;
+            passwordInput.disabled = true;
+            unlockButton.hidden = true;
+            adminForm.hidden = false;
+            status.textContent = '';
+        });
+
+        form.addEventListener('submit', async function (event) {
+            event.preventDefault();
+            status.textContent = 'Publishing...';
+
+            try {
+                const response = await fetch('/api/notifications', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-admin-password': adminPassword
+                    },
+                    body: JSON.stringify({
+                        title: document.getElementById('title').value,
+                        message: document.getElementById('message').value
+                    })
+                });
+                const result = await response.json();
+                if (!response.ok) {
+                    throw new Error(result.error || 'Could not publish notification.');
+                }
+
+                status.textContent = 'Notification published.';
+                document.getElementById('title').value = '';
+                document.getElementById('message').value = '';
+            } catch (error) {
+                status.textContent = error.message;
+            }
+        });
+    </script>
+</body>
+
+</html>

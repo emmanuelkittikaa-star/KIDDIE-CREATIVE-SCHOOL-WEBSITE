@@ -15,6 +15,7 @@
         </CENTER>
         <a class="btn" href="#welcome">HOME</a>
         <a class="btn" href="#contact">Contact us</a>
+        <a class="btn" href="#notifications">Notifications</a>
     </HEADER>
 
     <SECTIOn class="WELCOME">
@@ -44,6 +45,13 @@
         <a class="btn" href="student exam.html">student exam</a>
 
     </H3>
+    <section id="notifications" class="notifications-section">
+        <h1>School Notifications</h1>
+        <div id="notificationsList" class="notifications-list" aria-live="polite">
+            <p>Loading notifications...</p>
+        </div>
+        <a class="btn admin-link" href="notifications.html">Admin notifications</a>
+    </section>
     <section id="contact" class="contact">
         <H1 class="contact">Contact us</H1>
         <p>You can reach out to us on google at</p>
@@ -181,4 +189,86 @@
         transform: translateY(-2px);
         box-shadow: 0 12px 20px rgba(37, 211, 102, 0.4);
     }
+
+    .notifications-section {
+        max-width: 760px;
+        margin: 30px auto;
+        padding: 24px;
+        border: 3px solid #1d3557;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.94);
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
+    }
+
+    .notifications-section h1 {
+        margin-top: 0;
+        color: #1d3557;
+    }
+
+    .notification-item {
+        margin: 14px 0;
+        padding: 16px;
+        border-left: 5px solid #e63946;
+        background: #fff7df;
+    }
+
+    .notification-item h2 {
+        margin: 0 0 6px;
+        color: #1d3557;
+    }
+
+    .notification-date {
+        margin: 8px 0 0;
+        color: #555;
+        font-size: 0.9rem;
+    }
+
+    .admin-link {
+        margin-top: 10px;
+        background: #1d3557;
+    }
 </style>
+<script>
+    const notificationsList = document.getElementById('notificationsList');
+
+    function showNotifications(notifications) {
+        notificationsList.replaceChildren();
+
+        if (!notifications.length) {
+            notificationsList.innerHTML = '<p>No notifications yet.</p>';
+            return;
+        }
+
+        notifications.forEach(function (notification) {
+            const item = document.createElement('article');
+            item.className = 'notification-item';
+
+            const title = document.createElement('h2');
+            title.textContent = notification.title;
+            item.appendChild(title);
+
+            const message = document.createElement('p');
+            message.textContent = notification.message;
+            item.appendChild(message);
+
+            const date = document.createElement('p');
+            date.className = 'notification-date';
+            date.textContent = new Date(notification.createdAt).toLocaleString();
+            item.appendChild(date);
+
+            notificationsList.appendChild(item);
+        });
+    }
+
+    fetch('/api/notifications')
+        .then(function (response) {
+            if (!response.ok) {
+                throw new Error('Notifications are unavailable.');
+            }
+            return response.json();
+        })
+        .then(showNotifications)
+        .catch(function () {
+            notificationsList.innerHTML = '<p>Notifications are temporarily unavailable.</p>';
+        });
+</script>

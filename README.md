@@ -20,6 +20,18 @@ Exam results are sent by the Vercel function in `api/send-exam-result.js`. In Ve
 
 After adding the variables, redeploy the project. The email service must be configured before exam alerts can be delivered.
 
+### Website notifications
+
+The home page displays notifications published from `notifications.html`. Open the **Admin notifications** link on the home page and unlock it with `KCS2009`.
+
+For notifications to be shared with all visitors, connect a Vercel KV or Upstash Redis store and add these Vercel environment variables:
+
+- `KV_REST_API_URL`: the store REST URL
+- `KV_REST_API_TOKEN`: the store REST token
+- `NOTIFICATIONS_PASSWORD`: optional replacement for the default admin password
+
+Redeploy after adding the variables. Without the KV variables, the notification form cannot save announcements across visitors.
+
 ### Setup steps
 
 1. Sign in to Vercel with your account.
