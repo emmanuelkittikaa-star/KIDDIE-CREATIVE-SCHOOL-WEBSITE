@@ -154,25 +154,28 @@
             <p id="status" role="status"></p>
         </form>
 
-        <section id="resultsPanel" class="results-panel" hidden>
+        <section id="resultsPanel" class="results-panel">
             <h2>Submitted Tests</h2>
-            <div id="resultsSummary" class="results-summary">Loading results...</div>
-            <div class="results-table-wrap">
-                <table class="results-table">
-                    <thead>
-                        <tr>
-                            <th>Student</th>
-                            <th>Class</th>
-                            <th>Score</th>
-                            <th>Percent</th>
-                            <th>Status</th>
-                            <th>Submitted</th>
-                        </tr>
-                    </thead>
-                    <tbody id="resultsBody"></tbody>
-                </table>
+            <div id="resultsSummary" class="results-summary">Enter the admin password above and select Unlock to view
+                test results.</div>
+            <div id="resultsContent" hidden>
+                <div class="results-table-wrap">
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Class</th>
+                                <th>Score</th>
+                                <th>Percent</th>
+                                <th>Status</th>
+                                <th>Submitted</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsBody"></tbody>
+                    </table>
+                </div>
+                <button id="refreshResultsButton" class="refresh-button" type="button">Refresh results</button>
             </div>
-            <button id="refreshResultsButton" class="refresh-button" type="button">Refresh results</button>
         </section>
 
         <a class="home-link" href="index.html">Back to website</a>
@@ -186,6 +189,7 @@
         const status = document.getElementById('status');
         const resultsPanel = document.getElementById('resultsPanel');
         const resultsSummary = document.getElementById('resultsSummary');
+        const resultsContent = document.getElementById('resultsContent');
         const resultsBody = document.getElementById('resultsBody');
         const refreshResultsButton = document.getElementById('refreshResultsButton');
         let adminPassword = '';
@@ -223,24 +227,32 @@
                     throw new Error(result.error || 'Could not load results.');
                 }
                 renderResults(result);
+                resultsContent.hidden = false;
+                return true;
             } catch (error) {
                 resultsSummary.textContent = error.message;
+                resultsContent.hidden = true;
+                return false;
             }
         }
 
-        unlockButton.addEventListener('click', function () {
-            if (passwordInput.value !== 'KCS2009') {
-                status.textContent = 'Incorrect password.';
+        unlockButton.addEventListener('click', async function () {
+            adminPassword = passwordInput.value;
+            if (!adminPassword) {
+                status.textContent = 'Enter the admin password.';
                 return;
             }
 
-            adminPassword = passwordInput.value;
+            const unlocked = await loadResults();
+            if (!unlocked) {
+                status.textContent = 'Could not unlock the admin area.';
+                return;
+            }
+
             passwordInput.disabled = true;
             unlockButton.hidden = true;
             adminForm.hidden = false;
-            resultsPanel.hidden = false;
             status.textContent = '';
-            loadResults();
         });
 
         refreshResultsButton.addEventListener('click', loadResults);
