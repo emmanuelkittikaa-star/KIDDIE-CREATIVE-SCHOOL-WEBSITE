@@ -304,7 +304,7 @@
             </article>
 
             <article class="class-fees">
-                <h2>Kindergarten</h2>
+                <h2>RR1</h2>
                 <table>
                     <thead>
                         <tr>
@@ -315,36 +315,77 @@
                     <tbody>
                         <tr>
                             <td>Tuition</td>
-                            <td><input type="number" min="0" step="1" data-fee="kindergarten-tuition" value="2800">
+                            <td><input type="number" min="0" step="1" data-fee="rr1-tuition" value="2800">
                             </td>
                         </tr>
                         <tr>
                             <td>Books</td>
-                            <td><input type="number" min="0" step="1" data-fee="kindergarten-books" value="600"></td>
+                            <td><input type="number" min="0" step="1" data-fee="rr1-books" value="600"></td>
                         </tr>
                         <tr>
                             <td>Uniform</td>
-                            <td><input type="number" min="0" step="1" data-fee="kindergarten-uniform" value="450">
+                            <td><input type="number" min="0" step="1" data-fee="rr1-uniform" value="450">
                             </td>
                         </tr>
                         <tr>
                             <td>Paces</td>
-                            <td><input type="number" min="0" step="1" data-fee="kindergarten-paces" value="260"></td>
+                            <td><input type="number" min="0" step="1" data-fee="rr1-paces" value="260"></td>
                         </tr>
                         <tr>
                             <td>Field Trip</td>
-                            <td><input type="number" min="0" step="1" data-fee="kindergarten-field-trip" value="300">
+                            <td><input type="number" min="0" step="1" data-fee="rr1-field-trip" value="300">
                             </td>
                         </tr>
                         <tr>
                             <td>Library</td>
-                            <td><input type="number" min="0" step="1" data-fee="kindergarten-library" value="180">
+                            <td><input type="number" min="0" step="1" data-fee="rr1-library" value="180">
                             </td>
                         </tr>
                         <tr>
                             <td>Total</td>
-                            <td><input type="number" min="0" step="1" data-fee="kindergarten-total" value="3790"
-                                    readonly></td>
+                            <td><input type="number" min="0" step="1" data-fee="rr1-total" value="3790" readonly></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </article>
+
+            <article class="class-fees">
+                <h2>RR2</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fee item</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Tuition</td>
+                            <td><input type="number" min="0" step="1" data-fee="rr2-tuition" value="2800"></td>
+                        </tr>
+                        <tr>
+                            <td>Books</td>
+                            <td><input type="number" min="0" step="1" data-fee="rr2-books" value="600"></td>
+                        </tr>
+                        <tr>
+                            <td>Uniform</td>
+                            <td><input type="number" min="0" step="1" data-fee="rr2-uniform" value="450"></td>
+                        </tr>
+                        <tr>
+                            <td>Paces</td>
+                            <td><input type="number" min="0" step="1" data-fee="rr2-paces" value="260"></td>
+                        </tr>
+                        <tr>
+                            <td>Field Trip</td>
+                            <td><input type="number" min="0" step="1" data-fee="rr2-field-trip" value="300"></td>
+                        </tr>
+                        <tr>
+                            <td>Library</td>
+                            <td><input type="number" min="0" step="1" data-fee="rr2-library" value="180"></td>
+                        </tr>
+                        <tr>
+                            <td>Total</td>
+                            <td><input type="number" min="0" step="1" data-fee="rr2-total" value="3790" readonly></td>
                         </tr>
                     </tbody>
                 </table>
@@ -654,13 +695,20 @@
             "creche-field-trip": 280,
             "creche-library": 170,
             "creche-total": 3050,
-            "kindergarten-tuition": 2800,
-            "kindergarten-books": 600,
-            "kindergarten-uniform": 450,
-            "kindergarten-paces": 260,
-            "kindergarten-field-trip": 300,
-            "kindergarten-library": 180,
-            "kindergarten-total": 3790,
+            "rr1-tuition": 2800,
+            "rr1-books": 600,
+            "rr1-uniform": 450,
+            "rr1-paces": 260,
+            "rr1-field-trip": 300,
+            "rr1-library": 180,
+            "rr1-total": 3790,
+            "rr2-tuition": 2800,
+            "rr2-books": 600,
+            "rr2-uniform": 450,
+            "rr2-paces": 260,
+            "rr2-field-trip": 300,
+            "rr2-library": 180,
+            "rr2-total": 3790,
             "primary-one-tuition": 3200,
             "primary-one-books": 700,
             "primary-one-uniform": 500,
@@ -727,6 +775,18 @@
             adminKeyInput.value = '';
         }
 
+        function updateTotal(classFees) {
+            const totalInput = classFees.querySelector('[data-fee$="-total"]');
+            const amountInputs = classFees.querySelectorAll('input[data-fee]:not([data-fee$="-total"])');
+            const total = [...amountInputs].reduce(function (sum, input) {
+                return sum + (Number(input.value) || 0);
+            }, 0);
+            const totalKey = totalInput.dataset.fee;
+
+            totalInput.value = total;
+            localStorage.setItem("school-fee-" + FEE_STORAGE_VERSION + "-" + totalKey, total);
+        }
+
         feeInputs.forEach(function (input) {
             const feeKey = input.dataset.fee;
             const savedAmount = localStorage.getItem("school-fee-" + FEE_STORAGE_VERSION + "-" + feeKey);
@@ -739,8 +799,11 @@
 
             input.addEventListener("input", function () {
                 localStorage.setItem("school-fee-" + FEE_STORAGE_VERSION + "-" + feeKey, input.value);
+                updateTotal(input.closest('.class-fees'));
             });
         });
+
+        document.querySelectorAll('.class-fees').forEach(updateTotal);
 
         unlockFeesBtn.addEventListener('click', unlockFees);
         adminKeyInput.addEventListener('keydown', function (event) {
