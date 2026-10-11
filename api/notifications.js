@@ -1,4 +1,7 @@
 const notificationKey = 'kcs_notifications';
+const fs = require('fs').promises;
+const path = require('path');
+const localStoreFile = path.join(process.cwd(), 'api', 'notifications-store.json');
 
 function storageConfig() {
     return {
@@ -9,8 +12,15 @@ function storageConfig() {
 
 async function readNotifications() {
     const { url, token } = storageConfig();
+    // If KV REST API is not configured, fall back to a local JSON file (development only)
     if (!url || !token) {
-        throw new Error('Notification storage is not configured.');
+        try {
+            const content = await fs.readFile(localStoreFile, 'utf8');
+            const parsed = JSON.parse(content || '[]');
+            return Array.isArray(parsed) ? parsed : [];
+        } catch (err) {
+            return [];
+        }
     }
 
     const response = await fetch(url + '/get/' + notificationKey, {
@@ -30,6 +40,16 @@ async function readNotifications() {
 
 async function writeNotifications(notifications) {
     const { url, token } = storageConfig();
+    // If KV REST API is not configured, persist to a local JSON file (development only)
+    if (!url || !token) {
+        try {
+            await fs.writeFile(localStoreFile, JSON.stringify(notifications, null, 2), 'utf8');
+            return;
+        } catch (err) {
+            throw new Error('Could not save notification to local store.');
+        }
+    }
+
     const response = await fetch(url + '/set/' + notificationKey, {
         method: 'POST',
         headers: {
