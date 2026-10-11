@@ -24,7 +24,7 @@
     <H3>
         <p class="l">Welcome to our fully functional KCS website, here you can enroll students or learn more about our
             facilities
-            we offer day care services, RR1, RR2, Creche and Primary School Education. With help from our
+            we offer day care services, RR1 and RR2, Creche and Primary School Education. With help from our
             Well-Trained
             and Fully Educated Staff we get your child to the top of their potential in their journey of education from
             day care to Primary Six. we offer ACE Curriculum(Accelerated Christian Education) We teach your children up
@@ -274,6 +274,21 @@
 </style>
 <script>
     const notificationsList = document.getElementById('notificationsList');
+    const localStorageKey = 'kcs_notifications_local';
+
+    function readLocalNotifications() {
+        try {
+            const saved = localStorage.getItem(localStorageKey);
+            if (!saved) {
+                return [];
+            }
+
+            const parsed = JSON.parse(saved);
+            return Array.isArray(parsed) ? parsed : [];
+        } catch (error) {
+            return [];
+        }
+    }
 
     function showNotifications(notifications) {
         notificationsList.replaceChildren();
@@ -305,14 +320,42 @@
     }
 
     fetch('/api/notifications')
-        .then(function (response) {
+        .then(async function (response) {
+            const payload = await response.json().catch(function () {
+                return [];
+            });
+
             if (!response.ok) {
-                throw new Error('Notifications are unavailable.');
+                const localNotifications = readLocalNotifications();
+                if (localNotifications.length) {
+                    showNotifications(localNotifications);
+                    return;
+                }
+
+                throw new Error(payload && payload.error ? payload.error : 'Notifications are unavailable.');
             }
-            return response.json();
+
+            const notifications = Array.isArray(payload) ? payload : [];
+            if (notifications.length) {
+                showNotifications(notifications);
+                return;
+            }
+
+            const localNotifications = readLocalNotifications();
+            if (localNotifications.length) {
+                showNotifications(localNotifications);
+                return;
+            }
+
+            showNotifications([]);
         })
-        .then(showNotifications)
-        .catch(function () {
-            notificationsList.innerHTML = '<p>Notifications are temporarily unavailable.</p>';
+        .catch(function (error) {
+            const localNotifications = readLocalNotifications();
+            if (localNotifications.length) {
+                showNotifications(localNotifications);
+                return;
+            }
+
+            notificationsList.innerHTML = '<p>' + (error && error.message ? error.message : 'Notifications are temporarily unavailable.') + '</p>';
         });
 </script>

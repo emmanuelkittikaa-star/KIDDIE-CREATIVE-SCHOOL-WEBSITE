@@ -232,7 +232,30 @@
         const refreshResultsButton = document.getElementById('refreshResultsButton');
         const notificationsPanel = document.getElementById('notificationsPanel');
         const sentNotifications = document.getElementById('sentNotifications');
+        const localStorageKey = 'kcs_notifications_local';
         let adminPassword = '';
+
+        function readLocalNotifications() {
+            try {
+                const saved = localStorage.getItem(localStorageKey);
+                if (!saved) {
+                    return [];
+                }
+
+                const parsed = JSON.parse(saved);
+                return Array.isArray(parsed) ? parsed : [];
+            } catch (error) {
+                return [];
+            }
+        }
+
+        function writeLocalNotifications(notifications) {
+            try {
+                localStorage.setItem(localStorageKey, JSON.stringify(notifications));
+            } catch (error) {
+                // Ignore storage errors in private or restricted browsers.
+            }
+        }
 
         function renderNotifications(notifications) {
             sentNotifications.replaceChildren();
@@ -272,14 +295,29 @@
         async function loadNotifications() {
             try {
                 const response = await fetch('/api/notifications');
-                const notifications = await response.json();
+                const data = await response.json().catch(function () {
+                    return [];
+                });
+
                 if (!response.ok) {
-                    throw new Error(notifications.error || 'Could not load notifications.');
+                    throw new Error(data && data.error ? data.error : 'Could not load notifications.');
                 }
+
+                const notifications = Array.isArray(data) ? data : [];
                 renderNotifications(notifications);
                 notificationsPanel.hidden = false;
+                if (notifications.length) {
+                    writeLocalNotifications(notifications);
+                }
             } catch (error) {
-                sentNotifications.textContent = error.message;
+                const localNotifications = readLocalNotifications();
+                if (localNotifications.length) {
+                    renderNotifications(localNotifications);
+                    notificationsPanel.hidden = false;
+                    return;
+                }
+
+                sentNotifications.textContent = error.message || 'Could not load notifications.';
                 notificationsPanel.hidden = false;
             }
         }
@@ -298,14 +336,30 @@
                     },
                     body: JSON.stringify({ createdAt: createdAt })
                 });
-                const result = await response.json();
+                const result = await response.json().catch(function () {
+                    return {};
+                });
+
                 if (!response.ok) {
                     throw new Error(result.error || 'Could not delete notification.');
                 }
+
                 status.textContent = 'Notification deleted.';
                 await loadNotifications();
             } catch (error) {
-                status.textContent = error.message;
+                const localNotifications = readLocalNotifications();
+                const remainingNotifications = localNotifications.filter(function (notification) {
+                    return notification.createdAt !== createdAt;
+                });
+
+                if (remainingNotifications.length !== localNotifications.length) {
+                    writeLocalNotifications(remainingNotifications);
+                    renderNotifications(remainingNotifications);
+                    status.textContent = 'Notification deleted locally.';
+                    return;
+                }
+
+                status.textContent = error.message || 'Could not delete notification.';
             }
         }
 
@@ -389,7 +443,10 @@
                         message: document.getElementById('message').value
                     })
                 });
-                const result = await response.json();
+                const result = await response.json().catch(function () {
+                    return {};
+                });
+
                 if (!response.ok) {
                     throw new Error(result.error || 'Could not publish notification.');
                 }
@@ -398,7 +455,19 @@
                 document.getElementById('title').value = '';
                 document.getElementById('message').value = '';
             } catch (error) {
-                status.textContent = error.message;
+                const localNotifications = readLocalNotifications();
+                const newNotification = {
+                    title: document.getElementById('title').value.trim(),
+                    message: document.getElementById('message').value.trim(),
+                    createdAt: new Date().toISOString()
+                };
+
+                const nextNotifications = [newNotification].concat(localNotifications).slice(0, 30);
+                writeLocalNotifications(nextNotifications);
+                renderNotifications(nextNotifications);
+                status.textContent = 'Notification saved locally.';
+                document.getElementById('title').value = '';
+                document.getElementById('message').value = '';
             }
         });
     </script>
