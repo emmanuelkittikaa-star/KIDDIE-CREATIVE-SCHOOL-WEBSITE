@@ -235,10 +235,9 @@
 
             let recommendation = 'Daycare';
 
-            if (score >= 4) recommendation = 'RR1';
+            if (score >= 3) recommendation = 'RR1';
+            if (score >= 4) recommendation = 'RR2';
             if (score >= 5) recommendation = 'Primary One';
-            if (score >= 6) recommendation = 'Primary Two to Four';
-            if (score >= 7) recommendation = 'Primary Five or Six';
 
             resultBox.classList.add('show');
             resultText.textContent = 'Your score: ' + score + '/5. The suggested class is: ' + recommendation + '.';

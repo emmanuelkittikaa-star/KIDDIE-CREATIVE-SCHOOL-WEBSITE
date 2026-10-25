@@ -560,6 +560,8 @@
             ]
         };
 
+        questionBank.RR2 = questionBank.RR1;
+
         const classSelect = document.getElementById('childClass');
         const studentNameInput = document.getElementById('studentName');
         const registrationNumberInput = document.getElementById('registrationNumber');
@@ -574,7 +576,7 @@
         const sendDetailsBtn = document.getElementById('sendDetailsBtn');
 
         const whatsappNumber = '2347036970253';
-        const verificationEmailAddress = 'kcreative@gmail.com';
+        const verificationEmailAddress = 'kcreative@gmial.com';
         let examTimer = null;
         let presenceTimer = null;
         const examSessionId = 'exam-' + Math.random().toString(36).slice(2) + Date.now();
@@ -732,7 +734,7 @@
                 '<strong>Status:</strong> ' + status + '<br>' +
                 '<strong>Verification Code:</strong> ' + verificationCode + '<br>' +
                 (emailSent
-                    ? '<strong>Email alert:</strong> Sent to kcreative@gmail.com<br>'
+                    ? '<strong>Email alert:</strong> Sent to kcreative@gmial.com<br>'
                     : '<strong>Email alert:</strong> Not sent. The Vercel email settings need to be checked.<br>') +
                 (submittedByTimer
                     ? 'Time is up! The exam was auto-submitted.'
@@ -875,7 +877,7 @@
             saveExamResult(studentName, registrationNumber, selectedClass, score, total, percentage, verificationCode);
             sendExamResultEmail(studentName, registrationNumber, selectedClass, score, total, percentage, status, verificationCode, false).then(function (emailSent) {
                 resultText.innerHTML += emailSent
-                    ? '<br><strong>Email alert:</strong> Sent to kcreative@gmail.com'
+                    ? '<br><strong>Email alert:</strong> Sent to kcreative@gmial.com'
                     : '<br><strong>Email alert:</strong> Not sent. The Vercel email settings need to be checked.';
             });
 
