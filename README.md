@@ -15,7 +15,7 @@ This website is also ready for Vercel. Because it is a static site, Vercel will 
 Exam results are sent by the Vercel function in `api/send-exam-result.js`. In Vercel, open the project settings, choose **Environment Variables**, and add:
 
 - `RESEND_API_KEY`: an API key from Resend
-- `EXAM_ALERT_EMAIL`: `emmanuelkittikaa@gmail.com`
+- `EXAM_ALERT_EMAIL`: `kcreative@gmail.com`
 - `RESEND_FROM_EMAIL`: a verified Resend sender, for example `Kiddie Creative School <onboarding@resend.dev>` while testing
 
 After adding the variables, redeploy the project. The email service must be configured before exam alerts can be delivered.

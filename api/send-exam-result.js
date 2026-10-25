@@ -4,7 +4,7 @@ export default async function handler(request, response) {
     }
 
     const apiKey = process.env.RESEND_API_KEY;
-    const recipient = process.env.EXAM_ALERT_EMAIL || 'emmanuelkittikaa@gmail.com';
+    const recipient = process.env.EXAM_ALERT_EMAIL || 'kcreative@gmail.com';
     const fromAddress = process.env.RESEND_FROM_EMAIL || 'Kiddie Creative School <onboarding@resend.dev>';
 
     if (!apiKey) {

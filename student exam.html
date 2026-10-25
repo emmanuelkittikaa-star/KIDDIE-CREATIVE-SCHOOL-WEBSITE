@@ -232,9 +232,8 @@
                     <label for="childClass">Child's Class</label>
                     <select id="childClass">
                         <option value="">-- Choose class --</option>
-                        <option value="Daycare">Daycare</option>
-                        <option value="Creche">Creche</option>
-                        <option value="Kindergarten">Kindergarten</option>
+                        <option value="RR1">RR1</option>
+                        <option value="RR2">RR2</option>
                         <option value="Primary One">Primary One</option>
                         <option value="Primary Two">Primary Two</option>
                         <option value="Primary Three">Primary Three</option>
@@ -335,7 +334,7 @@
                 { question: '29. Which smell is from a flower?', options: ['Sweet', 'Sharp', 'Cold', 'Heavy'], answer: 'Sweet' },
                 { question: '30. What is 4 + 4?', options: ['6', '7', '8', '9'], answer: '8' }
             ],
-            Kindergarten: [
+            RR1: [
                 { question: '1. What is 10 - 4?', options: ['4', '5', '6', '7'], answer: '6' },
                 { question: '2. Which word is spelled correctly?', options: ['Hause', 'House', 'Hous', 'Houss'], answer: 'House' },
                 { question: '3. Which shape has three sides?', options: ['Triangle', 'Circle', 'Rectangle', 'Oval'], answer: 'Triangle' },
@@ -575,7 +574,7 @@
         const sendDetailsBtn = document.getElementById('sendDetailsBtn');
 
         const whatsappNumber = '2347036970253';
-        const verificationEmailAddress = 'emmanuelkittikaa@gmail.com';
+        const verificationEmailAddress = 'kcreative@gmail.com';
         let examTimer = null;
         let presenceTimer = null;
         const examSessionId = 'exam-' + Math.random().toString(36).slice(2) + Date.now();
@@ -733,7 +732,7 @@
                 '<strong>Status:</strong> ' + status + '<br>' +
                 '<strong>Verification Code:</strong> ' + verificationCode + '<br>' +
                 (emailSent
-                    ? '<strong>Email alert:</strong> Sent to emmanuelkittikaa@gmail.com<br>'
+                    ? '<strong>Email alert:</strong> Sent to kcreative@gmail.com<br>'
                     : '<strong>Email alert:</strong> Not sent. The Vercel email settings need to be checked.<br>') +
                 (submittedByTimer
                     ? 'Time is up! The exam was auto-submitted.'
@@ -876,7 +875,7 @@
             saveExamResult(studentName, registrationNumber, selectedClass, score, total, percentage, verificationCode);
             sendExamResultEmail(studentName, registrationNumber, selectedClass, score, total, percentage, status, verificationCode, false).then(function (emailSent) {
                 resultText.innerHTML += emailSent
-                    ? '<br><strong>Email alert:</strong> Sent to emmanuelkittikaa@gmail.com'
+                    ? '<br><strong>Email alert:</strong> Sent to kcreative@gmail.com'
                     : '<br><strong>Email alert:</strong> Not sent. The Vercel email settings need to be checked.';
             });
 
